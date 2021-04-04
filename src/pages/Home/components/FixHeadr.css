@@ -1,0 +1,11 @@
+.fix-header-layout {
+  display: flex;
+  background-color: white;
+}
+
+.fix-header-layout .avator-username-layout {
+  display: flex;
+  font-size: 12px;
+  background-color: white;
+  align-content:flex-end;
+}
