@@ -1,17 +1,16 @@
-import { Breadcrumb, Layout, Menu, Image, message } from 'antd';
+import { Breadcrumb, Layout, Menu, message } from 'antd';
 import React, { CSSProperties, FC, useState } from 'react';
-import { Link, Redirect, Route, Switch } from 'react-router-dom';
-
+import { Link, Route, Switch } from 'react-router-dom';
 import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  UserOutlined,
   VideoCameraOutlined,
   UploadOutlined,
   PieChartOutlined,
 } from '@ant-design/icons';
+
 import "./index.css"
+
 import FixHeader from './components/FixHeader';
+import  AssignmentBrowse from "../Browse/index";
 
 const { Sider, Content, Footer } = Layout;
 
@@ -82,9 +81,7 @@ const Home: FC = () => {
               </div>
             </Route>
             <Route exact path={router.home}>
-              <div className="site-layout-background" style={contentStyle}>
-                作业浏览!!!!
-              </div>
+              <AssignmentBrowse style={contentStyle}/>
             </Route>
           </Content>
           <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
@@ -98,5 +95,6 @@ export default Home;
 
 const contentStyle: CSSProperties = {
   padding: 24,
-  minHeight: 360
+  minHeight: 360,
+  background: "#fff",
 }
