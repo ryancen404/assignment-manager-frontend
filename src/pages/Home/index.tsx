@@ -10,7 +10,8 @@ import {
 import "./index.css"
 
 import FixHeader from './components/FixHeader';
-import  AssignmentBrowse from "../Browse/index";
+import AssignmentBrowsePage from "../Browse/index";
+import PublishPage from '../Publish/index';
 
 const { Sider, Content, Footer } = Layout;
 
@@ -71,9 +72,7 @@ const Home: FC = () => {
             <Breadcrumb.Item>Bill</Breadcrumb.Item> */}
             </Breadcrumb>
             <Route path={router.publish}>
-              <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
-                publish!!!
-              </div>
+              <PublishPage style={contentStyle} />
             </Route>
             <Route path={router.infoImport}>
               <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
@@ -81,7 +80,7 @@ const Home: FC = () => {
               </div>
             </Route>
             <Route exact path={router.home}>
-              <AssignmentBrowse style={contentStyle}/>
+              <AssignmentBrowsePage style={contentStyle} />
             </Route>
           </Content>
           <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
@@ -95,6 +94,6 @@ export default Home;
 
 const contentStyle: CSSProperties = {
   padding: 24,
-  minHeight: 360,
+  minHeight: 700,
   background: "#fff",
 }

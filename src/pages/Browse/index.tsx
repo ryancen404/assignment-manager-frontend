@@ -53,7 +53,7 @@ const columns = [
 ];
 
 // 作业浏览组件
-const AssignmentBrowse = (props: BrowseProps) => {
+const AssignmentBrowsePage = (props: BrowseProps) => {
   return (
     <div style={props.style}>
       <Table columns={columns} dataSource={fakeAssignmentData} />
@@ -61,4 +61,4 @@ const AssignmentBrowse = (props: BrowseProps) => {
   )
 }
 
-export default AssignmentBrowse;
+export default AssignmentBrowsePage;
