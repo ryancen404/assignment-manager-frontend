@@ -1,6 +1,6 @@
 import { Breadcrumb, Layout, Menu, message } from 'antd';
 import React, { CSSProperties, FC, useState } from 'react';
-import { Link, Route, Switch } from 'react-router-dom';
+import { Link, Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import {
   VideoCameraOutlined,
   UploadOutlined,
@@ -8,30 +8,29 @@ import {
 } from '@ant-design/icons';
 
 import "./index.css"
-
+import {router} from '../../router';
 import FixHeader from './components/FixHeader';
 import AssignmentBrowsePage from "../Browse/index";
 import PublishPage from '../Publish/index';
 
 const { Sider, Content, Footer } = Layout;
 
-const router = {
-  // 作业浏览
-  home: "/",
-  // 学生浏览
-  student: "/student",
-  // 作业发布
-  publish: "/publish",
-  // 信息导入
-  infoImport: "/import",
-  // 个人信息
-  profile: "/profile",
-  // 登陆
-  login: "/login"
-}
-
 const Home: FC = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const history = useHistory()
+
+  // render count
+  console.log("!Home render!");
+  
+
+  // 判断当前默认选择的menu
+  let defaultSelect = ['1']
+  const pathname = history.location.pathname;
+  if (pathname.indexOf(router.publish) !== -1) {
+    defaultSelect = ['2']
+  } else if (pathname.indexOf(router.infoImport) !== -1) {
+    defaultSelect = ['3']
+  }
 
   return (
     <Switch>
@@ -48,9 +47,9 @@ const Home: FC = () => {
           <div className="logo" >
             <h1>高校作业管理系统</h1>
           </div>
-          <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+          <Menu theme="dark" defaultSelectedKeys={defaultSelect} mode="inline">
             <Menu.Item key="1" icon={<PieChartOutlined />} >
-              <Link to={router.home}>作业浏览</Link>
+              <Link to={router.browse.root}>作业浏览</Link>
             </Menu.Item>
             <Menu.Item key="2" icon={<UploadOutlined />}>
               <Link to={router.publish}>作业发布</Link>
@@ -71,6 +70,7 @@ const Home: FC = () => {
               {/* <Breadcrumb.Item>User</Breadcrumb.Item>
             <Breadcrumb.Item>Bill</Breadcrumb.Item> */}
             </Breadcrumb>
+            {/* 发布页 */}
             <Route path={router.publish}>
               <PublishPage style={contentStyle} />
             </Route>
@@ -79,8 +79,11 @@ const Home: FC = () => {
                 信息管理!!!
               </div>
             </Route>
-            <Route exact path={router.home}>
+            <Route path={router.browse.root}>
               <AssignmentBrowsePage style={contentStyle} />
+            </Route>
+            <Route exact path={router.home}>
+              <Redirect to={router.browse.root}/>
             </Route>
           </Content>
           <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>

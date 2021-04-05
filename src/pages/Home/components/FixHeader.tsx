@@ -1,4 +1,4 @@
-import React, { CSSProperties, FC, useState } from 'react';
+import { CSSProperties } from 'react';
 import { Layout, Avatar, } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import "./FixHeadr.css"

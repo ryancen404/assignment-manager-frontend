@@ -54,7 +54,7 @@ const PublishPage = (props: PublishProps) => {
         <Form.Item
           name="name"
           label="作业名"
-          rules={[{required: true, message: '必须要输入作业名', type: 'string'}]}>
+          rules={[{required: true, message: '作业名不能为空', type: 'string'}]}>
           <Input
             placeholder="Assignment 1" />
         </Form.Item>

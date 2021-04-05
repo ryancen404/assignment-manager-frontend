@@ -1,5 +1,4 @@
-import React, { FC } from 'react';
-import { Button } from 'antd';
+import { FC } from 'react';
 import Home from "./pages/Home/index";
 import './App.css';
 import { BrowserRouter as Router } from 'react-router-dom'

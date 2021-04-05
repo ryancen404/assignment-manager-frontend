@@ -1,64 +1,115 @@
 import { Space, Table, Tag } from 'antd';
-import React, { CSSProperties } from 'react';
+import { CSSProperties, useEffect, useState } from 'react';
+import { Route, Switch, useRouteMatch, Link } from "react-router-dom";
 
-import { AssignmentStatus } from "../../types"
-import {fakeAssignmentData} from "./mockData"
+import BrowseDetailPage from "./detail";
+import { router } from "../../router" 
+import { AssignmentStatus, Assignment, Class } from "../../types"
+
+import assignmentService from "../../services/teacher/assignment";
 
 interface BrowseProps {
   style: CSSProperties,
 }
 
-const columns = [
-  {
-    title: "作业",
-    dataIndex: "name",
-    render: (text: string) =>(<a>{text}</a>),
-  },
-  {
-    title: '时间',
-    dataIndex: 'timeFromTo',
-  },
-  {
-    title: '班级号',
-    dataIndex: 'classNumber',
-  },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    render: (text: AssignmentStatus) => {
-      let color = ''
-      if (text === '未开始') {
-        color = 'green';
-      } else if (text === '进行中'){
-        color = 'geekblue';
-      } else if (text === '已结束') {
-        color = 'volcano';
-      }
-      return (
-        <Tag color={color} key={"tag"}>
-              {text.toUpperCase()}
-        </Tag>
-      )
-    }
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (text: string) => (
-      <Space size="middle">
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
+const log = (...message: any[]) => console.log("AssignmentBrowsePage", message)
 
-// 作业浏览组件
 const AssignmentBrowsePage = (props: BrowseProps) => {
+  const [assignments, setAssignments] = useState<Assignment[]>([])
+  const match = useRouteMatch()
+  log("match: ", match.path);
+
+  // 首次执行请求作业列表数组
+  useEffect(() => {
+    log(assignments);
+    requestAllAssignment()
+    log(assignments);
+  }, [])
+
+  const columns = [
+    {
+      title: "作业",
+      dataIndex: "name",
+      key: "name",
+      render: (text: string, record: Assignment) =>
+        (<Link to={`${match.path}/${record.assignId}`}>{text}</Link>),
+    },
+    {
+      title: '时间',
+      key: "time",
+      dataIndex: 'timeFromTo',
+    },
+    {
+      title: '班级',
+      key: "classs",
+      dataIndex: 'classs',
+      render: (record: Class[]) => {
+        log("render.", record)
+        return(
+          <>
+            {record.map(clazz => 
+              <p>{clazz.className}</p>
+            )}
+          </>
+        )
+      }
+    },
+    {
+      title: '状态',
+      key: "status",
+      dataIndex: 'status',
+      render: (text: AssignmentStatus) => {
+        let color = ''
+        if (text === '未开始') {
+          color = 'green';
+        } else if (text === '进行中') {
+          color = 'geekblue';
+        } else if (text === '已结束') {
+          color = 'volcano';
+        }
+        return (
+          <Tag color={color} key={"tag"}>
+            {text.toUpperCase()}
+          </Tag>
+        )
+      }
+    },
+    {
+      title: '操作',
+      key: 'action',
+      render: (text: string, record: Assignment) => {
+        return (
+          <Space size="small">
+            {record.status === '已结束' ? <a>批改</a> : null}
+            <a>删除</a>
+          </Space>
+        )
+      },
+    },
+  ];
+
+  // 请求, todo: loading 状态？
+  const requestAllAssignment = () => {
+    // todo delete
+    const allAssignment = assignmentService.getEasyAll("my_tid");
+    setAssignments(allAssignment)
+  }
+
   return (
     <div style={props.style}>
-      <Table columns={columns} dataSource={fakeAssignmentData} />
+      <Switch>
+        {/* 点击后的作业详情页 :assignId作业Id */}
+        <Route path={`${match.path}${router.browse.detail}`}>
+          <BrowseDetailPage />
+        </Route>
+        <Route path={match.path}>
+          {log(assignments)}
+          <Table columns={columns} dataSource={assignments} />
+        </Route>
+      </Switch>
     </div>
   )
 }
 
+// 作业浏览页，路由:"/"，详情页:"/browse/:assignId"
 export default AssignmentBrowsePage;
