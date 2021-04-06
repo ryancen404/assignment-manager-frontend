@@ -1,10 +1,15 @@
-import { Button, Descriptions, Divider, PageHeader, Space, Typography } from 'antd';
-import React, { CSSProperties, useEffect, useState } from 'react';
+import { CSSProperties, useEffect, useState } from 'react';
+import { Button, PageHeader, Tabs } from 'antd';
 import { useRouteMatch } from 'react-router-dom';
 
+import HeaderContent from './components/HeaderContent';
+import DetailContent from './components/DetailContent';
+import ContentWrapper from '../../components/ContentWrapper'
+
 import { router, pageName } from '../../router';
-import { Assignment, AssignmentFile } from '../../types';
+import { Assignment } from '../../types';
 import assignmentService from "../../services/teacher/assignment";
+const { TabPane } = Tabs;
 
 interface MatchParams {
   assignId: string;
@@ -15,8 +20,12 @@ export interface BrowseDetailPageProps {
 }
 
 const BrowseDetailPage = (props: BrowseDetailPageProps) => {
-  const [assignment, setAssignment] = useState<Assignment>()
-  const match = useRouteMatch<MatchParams>(`${router.browse.root}${router.browse.detail}`)
+  // 作业对象
+  const [assignment, setAssignment] = useState<Assignment>();
+  // 当前选择的tab
+  const [tabIndex, setTabIndex] = useState("1");
+
+  const match = useRouteMatch<MatchParams>(`${router.browse.root}${router.browse.detail}`);
   console.log("BrowseDetailPage", match?.params.assignId);
 
   const assignId = match?.params.assignId;
@@ -35,8 +44,17 @@ const BrowseDetailPage = (props: BrowseDetailPageProps) => {
   console.log("BrowseDetailPage data:", assignment);
   console.log("the files is null?", files);
 
+  const onTabsChange = (index: string) => {
+    console.log("BrowseDetailPage curren tab:", index);
+    setTabIndex(index);
+  }
+
   return (
-    <div style={props.style}>
+    // <div style={props.style}>
+    <ContentWrapper
+      isError={assignment === undefined}
+      style={props.style}
+      extra={<Button type="primary">Back Home</Button>}>
       <PageHeader
         onBack={() => window.history.back()}
         title={pageName.browse}
@@ -47,38 +65,18 @@ const BrowseDetailPage = (props: BrowseDetailPageProps) => {
           <Button key="2">修改</Button>,
           <Button key="1" type="primary">
             完成
-        </Button>,
+          </Button>,
         ]}
-      >
-        <Descriptions size="small" column={3}>
-          <Descriptions.Item label="作业">{assignment?.name}</Descriptions.Item>
-          <Descriptions.Item label="时间">{assignment?.timeFromTo}</Descriptions.Item>
-          <Descriptions.Item label="班级">
-            <Space split={<Divider type="vertical" />} align="baseline">
-              {assignment?.classs.map(clazz => {
-                return (<p key={clazz.classId}>{clazz.className} </p>);
-              })}
-            </Space>
-          </Descriptions.Item>
-          <Descriptions.Item label="描述" span={3} style={{ textAlign: "left" }}>
-            {assignment?.description}
-          </Descriptions.Item>
-          <Descriptions.Item label="附件">
-            {
-              files === undefined
-                ? <p>无</p>
-                : <Space split={<Divider type="vertical" />}>
-                  {
-                    files?.map(file => {
-                      return (<Typography.Link key={file.md5} href={file.link}>{file.name}</Typography.Link>)
-                    })
-                  }
-                </Space>
-            }
-          </Descriptions.Item>
-        </Descriptions>
+        footer={
+          <Tabs defaultActiveKey="1" onChange={onTabsChange}>
+            {assignment?.classs.map((value, index) => {
+              return <TabPane tab={value.className} key={index} />
+            })}
+          </Tabs>
+        }>
+        <HeaderContent assignment={assignment} column={3} />
       </PageHeader>
-    </div>
+    </ContentWrapper>
   )
 }
 

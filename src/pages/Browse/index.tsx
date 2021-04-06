@@ -2,7 +2,7 @@ import { Space, Table, Tag } from 'antd';
 import { CSSProperties, useEffect, useState } from 'react';
 import { Route, Switch, useRouteMatch, Link } from "react-router-dom";
 
-import BrowseDetailPage from "./detail";
+import BrowseDetailPage from "./Detail";
 import { router } from "../../router" 
 import { AssignmentStatus, Assignment, Class } from "../../types"
 

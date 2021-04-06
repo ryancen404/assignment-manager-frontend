@@ -62,7 +62,6 @@ const Home: FC = () => {
         <Layout
           className="site-layout">
           <FixHeader
-            className="fix-header-layout"
             userName={"岑金富"}
             onAvatorClick={() => message.info("点击头像路由到个人页")} />
           <Content style={{ margin: '0 16px' }}>

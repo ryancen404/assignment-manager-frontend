@@ -33,16 +33,14 @@ const headerStyle: CSSProperties = {
   flexDirection: 'row',
   //内容居中和靠右
   alignItems: "center",
-  justifyContent: "flex-end"
+  justifyContent: "flex-end",
 }
 
 const FixHeader = (props: HeaderProps) => {
 
   return (
     <Header
-      className="fix-header-layout"
-      style={headerStyle}
-    >
+      style={headerStyle}>
       <div
         onClick={props.onAvatorClick}
         style={avatorStyle}>
