@@ -1,17 +1,21 @@
-export interface Assignment {
+export interface BaseAssignment {
   assignId: string,
-  name: string,
+  assignName: string,
   description?: string,
+}
+
+export interface Assignment extends BaseAssignment {
   // 时间区间
   timeFromTo: string,
   // 与作业关联的班级数组
-  classs: Class[],
+  classs: BaseClass[],
   // 当前作业状态，以时间区间作为状态依据
   status: AssignmentStatus,
   // 附件列表
   files?: AssignmentFile[]
-  // actions: string,
 }
+
+export type AssignmentStatus = '未开始' | '进行中' | '已结束';
 
 /**
  * 作业附件对象，md5用作校验
@@ -23,26 +27,26 @@ export interface AssignmentFile {
   length: number
 }
 
-export type AssignmentStatus = '未开始' | '进行中' | '已结束'
-
-export interface Teacher {
-  tId: number,
-  username: string,
-  avator: string,
-  classs: Class[],
-}
 
 /**
  * 班级实体
+ * 在浏览页和详情页表头使用
+ * @param classId 班级唯一标识
+ * @param className 班级名
+ * @param className 班级号
  */
-export interface Class {
-  classId: number,
-  // 班级名
+export interface BaseClass {
+  classId: string,
   className: string,
-  // 班级号
   classNumber: string
-  // 班级学生, 在浏览页时为空
-  students?: ClassStudent[]
+}
+
+/**
+ * 在详情页的学生列表对象中使用，其中学生信息包含作业完成情况
+ * @param students 班级学生
+ */
+export interface DetailClass extends BaseClass {
+  studentsAssignment: StudentAssignment[]
 }
 
 /**
@@ -58,6 +62,28 @@ export interface ClassStudent {
   className: string,
   // 班级号
   classNumber: string
+}
+
+/**
+ * Student作业完成情况类型
+ * @field status: 学生是否已经完成作业
+ * @field scroe: 分数
+ */
+export interface StudentAssignment extends BaseAssignment, ClassStudent {
+  status: boolean,
+  corrected: boolean
+  score: number,
+}
+
+
+/**
+ * 教师用户
+ */
+export interface Teacher {
+  tId: number,
+  username: string,
+  avator: string,
+  classs: DetailClass[],
 }
 
 /**

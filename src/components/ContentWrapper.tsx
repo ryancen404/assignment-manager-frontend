@@ -14,7 +14,7 @@ export interface ContentWrapperProps {
     title?: string,
     subTitle?: string,
     extra?: JSX.Element,
-    children: JSX.Element
+    children: JSX.Element[] | JSX.Element
 }
 
 const renderContent = (props: ContentWrapperProps) => {
