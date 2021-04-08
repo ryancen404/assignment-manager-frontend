@@ -4,10 +4,9 @@ import { Route, Switch, useRouteMatch, Link } from "react-router-dom";
 
 import BrowseDetailPage from "./Detail";
 import { router } from "../../router" 
-import { AssignmentStatus, Assignment, DetailClass } from "../../types"
+import { AssignmentStatus, Assignment, Class } from "../../types"
 
 import assignmentService from "../../services/teacher/assignment";
-import { ColumnsType } from 'antd/lib/table/Table';
 
 interface BrowseProps {
   style: CSSProperties,
@@ -22,13 +21,15 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
 
   // 首次执行请求作业列表数组
   useEffect(() => {
+    log(assignments);
     requestAllAssignment()
+    log(assignments);
   }, [])
 
-  const columns: ColumnsType<Assignment> = [
+  const columns = [
     {
       title: "作业",
-      dataIndex: "assignName",
+      dataIndex: "name",
       key: "name",
       render: (text: string, record: Assignment) =>
         (<Link to={`${match.path}/${record.assignId}`}>{text}</Link>),
@@ -42,7 +43,7 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
       title: '班级',
       key: "classs",
       dataIndex: 'classs',
-      render: (record: DetailClass[]) => {
+      render: (record: Class[]) => {
         log("render.", record)
         return(
           <>
@@ -102,6 +103,7 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
           <BrowseDetailPage />
         </Route>
         <Route path={match.path}>
+          {log(assignments)}
           <Table columns={columns} dataSource={assignments} />
         </Route>
       </Switch>
