@@ -8,7 +8,11 @@ export const router = {
   // 学生浏览
   student: "/student",
   // 作业发布
-  publish: "/publish",
+  publish: {
+    root: "/publish",
+    // 修改作业内容页
+    fix: "/:assignId"
+  },
   // 信息导入
   infoImport: "/import",
   // 个人信息

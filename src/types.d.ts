@@ -11,6 +11,8 @@ export interface Assignment extends BaseAssignment {
   classs: BaseClass[],
   // 当前作业状态，以时间区间作为状态依据
   status: AssignmentStatus,
+  // 是否已经被我(教师)批改, todo delete nullable
+  corrected?: boolean,
   // 附件列表
   files?: AssignmentFile[]
 }
@@ -68,6 +70,7 @@ export interface ClassStudent {
  * Student作业完成情况类型
  * @field status: 学生是否已经完成作业
  * @field scroe: 分数
+ * @field corrected: 我(学生)作业是否已经被老师批改
  */
 export interface StudentAssignment extends BaseAssignment, ClassStudent {
   status: boolean,
