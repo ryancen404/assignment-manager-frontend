@@ -1,33 +1,32 @@
 import { CSSProperties } from "react";
-import {
-  Form,
-  Input,
-  Select,
-  DatePicker,
-  Upload,
-  Button
-} from 'antd';
-import { InboxOutlined } from '@ant-design/icons';
-
-
-const { Option } = Select;
-const { RangePicker } = DatePicker;
-
+import { Form, Button } from 'antd';
+import { useLocation, useRouteMatch } from "react-router";
+import { Assignment } from "../../types";
+import { router } from "../../router";
+import { ClassItem, DesItem, FileItem, NameItem, TimeItem } from "./components/PublishItems";
 
 interface PublishProps {
   style: CSSProperties,
 }
 
-const normFile = (e: any) => {
-  console.log('Upload event:', e);
-  if (Array.isArray(e)) {
-    return e;
-  }
-  return e && e.fileList;
-};
+interface MatchParams {
+  assignId: string
+}
 
+interface LoactionParams {
+  assignment: Assignment
+}
 
 const PublishPage = (props: PublishProps) => {
+  const match = useRouteMatch<MatchParams>(`${router.publish.root}${router.publish.fix}`);
+  const location = useLocation<LoactionParams>();
+  // 当前路由进入是否是为了修改
+  const forModfiy = match !== null
+  console.log("forModfiy:", forModfiy);
+
+  // 要修改的作业对象
+  const modifyAssignment = location?.state?.assignment;
+  console.log("modify assignment:", modifyAssignment)
 
   /**
    * 当表单被提交时返回
@@ -51,48 +50,11 @@ const PublishPage = (props: PublishProps) => {
         scrollToFirstError={true}
         onChange={onChange}
         onFinish={onFinish}>
-        <Form.Item
-          name="name"
-          label="作业名"
-          rules={[{ required: true, message: '作业名不能为空', type: 'string' }]}>
-          <Input
-            placeholder="Assignment 1" />
-        </Form.Item>
-        <Form.Item
-          name="desc"
-          label="添加描述"
-          rules={[{ type: 'string' }]}>
-          <Input
-            placeholder="更多描述写在这里" />
-        </Form.Item>
-        <Form.Item
-          name="class"
-          label="选择班级"
-          rules={[{ required: true, message: '至少选择一个班级!', type: 'array' }]}>
-          <Select mode="multiple" placeholder="请选择该作业发布的班级">
-            <Option value="red">班级1</Option>
-            <Option value="green">班级2</Option>
-            <Option value="blue">班级3</Option>
-          </Select>
-        </Form.Item>
-        <Form.Item
-          name="time"
-          label="设置时间"
-          wrapperCol={{ span: 6 }}
-          rules={[{ type: 'array' as const, required: true, message: '请选择时间' }]}>
-          <RangePicker showTime format="YYYY-MM-DD" />
-        </Form.Item>
-        <Form.Item label="上传附件">
-          <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
-            <Upload.Dragger name="files" action="/upload.do">
-              <p className="ant-upload-drag-icon">
-                <InboxOutlined />
-              </p>
-              <p className="ant-upload-text">单击或拖动文件到此区域进行上传</p>
-              <p className="ant-upload-hint">支持单个或批量上传</p>
-            </Upload.Dragger>
-          </Form.Item>
-        </Form.Item>
+        <NameItem defaultAssignment={modifyAssignment} />
+        <DesItem defaultAssignment={modifyAssignment} />
+        <ClassItem defaultAssignment={modifyAssignment} />
+        <TimeItem defaultAssignment={modifyAssignment} />
+        <FileItem />
         <Form.Item>
           <Button type="primary" htmlType="submit">
             立即发布
@@ -107,3 +69,4 @@ const PublishPage = (props: PublishProps) => {
 
 // 作业发布页
 export default PublishPage;
+

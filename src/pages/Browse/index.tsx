@@ -17,8 +17,8 @@ const log = (...message: any[]) => console.log("AssignmentBrowsePage", message)
 
 const AssignmentBrowsePage = (props: BrowseProps) => {
   const [assignments, setAssignments] = useState<Assignment[]>([])
-  const match = useRouteMatch()
-  log("match: ", match.path);
+  const match = useRouteMatch(router.browse.root)
+  log("match: ", match?.path);
 
   // 首次执行请求作业列表数组
   useEffect(() => {
@@ -31,7 +31,7 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
       dataIndex: "assignName",
       key: "name",
       render: (text: string, record: Assignment) =>
-        (<Link to={`${match.path}/${record.assignId}`}>{text}</Link>),
+        (<Link to={`${match?.path}/${record.assignId}`}>{text}</Link>),
     },
     {
       title: '时间',
@@ -98,10 +98,10 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
     <div style={props.style}>
       <Switch>
         {/* 点击后的作业详情页 :assignId作业Id */}
-        <Route path={`${match.path}${router.browse.detail}`}>
+        <Route path={`${match?.path}${router.browse.detail}`}>
           <BrowseDetailPage />
         </Route>
-        <Route path={match.path}>
+        <Route path={match?.path}>
           <Table columns={columns} dataSource={assignments} />
         </Route>
       </Switch>

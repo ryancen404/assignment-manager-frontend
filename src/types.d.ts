@@ -6,7 +6,8 @@ export interface BaseAssignment {
 
 export interface Assignment extends BaseAssignment {
   // 时间区间
-  timeFromTo: string,
+  startTime: string,
+  endTime: string,
   // 与作业关联的班级数组
   classs: BaseClass[],
   // 当前作业状态，以时间区间作为状态依据

@@ -6,7 +6,7 @@ import { Assignment } from "../../../types";
 const renderHeaderContent = (column: number = 3, assignment?: Assignment) => (
     <Descriptions size="small" column={column}>
         <Descriptions.Item label="作业">{assignment?.assignName}</Descriptions.Item>
-        <Descriptions.Item label="时间">{assignment?.timeFromTo}</Descriptions.Item>
+        <Descriptions.Item label="时间">{`${assignment?.startTime} - ${assignment?.endTime}`}</Descriptions.Item>
         <Descriptions.Item label="班级">
             <Space split={<Divider type="vertical" />} align="baseline">
                 {assignment?.classs.map(clazz => {

@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect, useState } from 'react';
+import { CSSProperties, useEffect, useState } from 'react';
 import { Button, PageHeader, Tabs } from 'antd';
 import { useRouteMatch } from 'react-router-dom';
 
@@ -9,7 +9,7 @@ import ContentWrapper from '../../components/ContentWrapper'
 import { router, pageName } from '../../router';
 import { Assignment } from '../../types';
 import assignmentService from "../../services/teacher/assignment";
-import { CompleteButton, DeleteButton, FixButton } from './components/DetailHeaderButton';
+import { CompleteButton, DeleteButton, ModifyButton } from './components/DetailHeaderButton';
 const { TabPane } = Tabs;
 
 interface MatchParams {
@@ -61,8 +61,9 @@ const BrowseDetailPage = (props: BrowseDetailPageProps) => {
         title={pageName.browse}
         subTitle={assignment?.assignName}
         extra={[
+          // 右上角的按钮
           <DeleteButton assignId={assignId!!} />,
-          <FixButton assignId={assignId!!} />,
+          <ModifyButton assignment={assignment!!} />,
           <CompleteButton assignId={assignId!!} />,
         ]}
         footer={

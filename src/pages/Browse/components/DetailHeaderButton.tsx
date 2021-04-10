@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { router } from "../../../router";
 import assignmentService from "../../../services/teacher/assignment";
 import { requestWraaper } from "../../../services/utils";
+import { Assignment } from "../../../types";
 
 /**
  * 对删除做二次确认处理
@@ -107,10 +108,16 @@ export const CompleteButton = ({ assignId }: { assignId: string }) => {
 /**
  * 点击修改会路由到/publish/:assignId，根据id内容请求原先内容填充
  */
- export const FixButton = ({ assignId }: { assignId: string }) => {
+export const ModifyButton = ({ assignment }: { assignment: Assignment }) => {
+    const routerParams = {
+        pathname: `${router.publish.root}/${assignment.assignId}`,
+        state: {
+            assignment: assignment
+        }
+    }
     return (
         <Tooltip placement="topLeft" title="如果数据有误可以修改～" arrowPointAtCenter>
-            <Link to={`${router.publish.root}/${assignId}`}>
+            <Link to={routerParams}>
                 <Button key="2">修改</Button>
             </Link>
         </Tooltip>
