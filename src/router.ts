@@ -18,10 +18,10 @@ export const router = {
   // 个人信息
   profile: "/profile",
   // 登陆
-  login: "/login"
+  login: "/login",
 }
 
 export const pageName = {
   browse: "作业浏览",
-  
+  info: "信息管理"
 }

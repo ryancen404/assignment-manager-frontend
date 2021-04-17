@@ -1,5 +1,5 @@
-import { CSSProperties } from "react";
-import { Form, Button } from 'antd';
+import React, { CSSProperties } from "react";
+import { Form, Button, PageHeader } from 'antd';
 import { useLocation, useRouteMatch } from "react-router";
 import { Assignment } from "../../types";
 import { router } from "../../router";
@@ -42,6 +42,12 @@ const PublishPage = (props: PublishProps) => {
 
   return (
     <div style={props.style}>
+      <PageHeader
+        style={{ marginLeft: '170px' }}
+        onBack={() => window.history.back()}
+        title="信息发布"
+        subTitle="This is a subtitle"
+      />
       <Form
         labelCol={{ span: 6 }}
         wrapperCol={{ span: 14 }}

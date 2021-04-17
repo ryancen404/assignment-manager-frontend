@@ -1,0 +1,31 @@
+.Container {
+  position:absolute;
+  width:100%;
+  top:0;
+  bottom:0;
+  background-image: url(../../assets/login_bg.jpeg);
+  background-size: cover;
+}
+
+.TextContainer {
+  position: relative;
+  width: auto;
+  margin: 0 auto;
+  top: 3%;
+  color:whitesmoke;
+}
+
+.ColumContainer {
+  position: relative;
+  background-color: whitesmoke;
+  margin: 0 auto;
+  width: 34%;
+  top: 20%;
+  bottom: 30%;
+  display:inline-block !important;
+  text-align: center;
+  /* padding-right: 5%;
+  padding-top: 2%;
+  padding-bottom: 0%;
+  padding-left: 5%; */
+}

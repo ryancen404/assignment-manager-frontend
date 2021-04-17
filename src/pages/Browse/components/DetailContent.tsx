@@ -1,4 +1,4 @@
-import { Space, Table, Tag } from 'antd';
+import { Button, Space, Table, Tag } from 'antd';
 import React, { CSSProperties, Key, useEffect, useState } from 'react';
 import { StudentAssignment } from '../../../types';
 
@@ -70,11 +70,16 @@ const columns = [
             return (
                 <Space size="small">
                     <a>预览作业</a>
+                    <Button type="link" onClick={onClickScoring}>打分</Button>
                 </Space>
             )
         },
     }
-]
+];
+
+const onClickScoring = () => {
+    
+}
 
 const getRowSelection = (
     dataSource: StudentAssignmentWithKey[] | undefined,

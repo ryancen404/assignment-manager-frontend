@@ -53,10 +53,19 @@ export interface DetailClass extends BaseClass {
 }
 
 /**
+ * 在信息管理中使用的班级浏览
+ */
+export interface ClassBrowse extends BaseClass {
+  students: ClassStudent[]
+}
+
+/**
  * 班级的学生信息
  */
 export interface ClassStudent {
-  sId: number,
+  sId: string,
+  // 绑定的班级id
+  classId: string
   // 学号
   studentNumber: string,
   // 学生姓名
@@ -64,7 +73,9 @@ export interface ClassStudent {
   // 班级名
   className: string,
   // 班级号
-  classNumber: string
+  classNumber: string,
+  // 年级
+  grade: string
 }
 
 /**
@@ -87,7 +98,7 @@ export interface Teacher {
   tId: number,
   username: string,
   avator: string,
-  classs: DetailClass[],
+  classs: string[],
 }
 
 /**

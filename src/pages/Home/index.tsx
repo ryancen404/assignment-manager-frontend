@@ -1,5 +1,5 @@
 import { Layout, Menu, message } from 'antd';
-import React, { CSSProperties, FC, useState } from 'react';
+import { CSSProperties, FC, useState } from 'react';
 import { Link, Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import {
   VideoCameraOutlined,
@@ -12,6 +12,9 @@ import { router } from '../../router';
 import FixHeader from './components/FixHeader';
 import AssignmentBrowsePage from "../Browse/index";
 import PublishPage from '../Publish/index';
+import InfoManagerPage from '../Info';
+import LoginPage from '../Login';
+import Global from '../../Global';
 
 const { Sider, Content, Footer } = Layout;
 
@@ -44,6 +47,40 @@ const SiderLayout = ({ defaultSelect }: { defaultSelect: string[] }) => {
   )
 }
 
+/**
+ * 除了侧边栏的主内容
+ */
+const MainContent = () => {
+  return (
+    <Layout
+      className="site-layout">
+      <FixHeader
+        userName={"岑金富"}
+        onAvatorClick={() => message.info("点击头像路由到个人页")} />
+      <Content style={{ margin: '16px 16px' }}>
+        {/* 发布页 */}
+        <Route path={[router.publish.root, `${router.publish.root}${router.publish.fix}`]}>
+          <PublishPage style={contentStyle} />
+        </Route>
+        {/* 信息管理页 */}
+        <Route path={router.infoImport}>
+          <InfoManagerPage style={contentStyle} />
+        </Route>
+        {/* 默认的作业浏览页 */}
+        <Route path={router.browse.root}>
+          <AssignmentBrowsePage style={contentStyle} />
+        </Route>
+        {/* 无根页面直接重定向到浏览页 */}
+        <Route exact path={router.home}>
+          {Global.isLogin() ? <Redirect to={router.browse.root} /> : <Redirect to={router.login} />}
+        </Route>
+      </Content>
+      <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+    </Layout>
+  )
+}
+
+
 const Home: FC = () => {
   const history = useHistory()
 
@@ -62,39 +99,11 @@ const Home: FC = () => {
   return (
     <Switch>
       <Route path={router.login}>
-        <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
-          login!!!
-      </div>
+        <LoginPage />
       </Route>
       <Layout style={{ minHeight: '100vh' }}>
-        <SiderLayout defaultSelect={defaultSelect}/>
-        <Layout
-          className="site-layout">
-          <FixHeader
-            userName={"岑金富"}
-            onAvatorClick={() => message.info("点击头像路由到个人页")} />
-          <Content style={{ margin: '16px 16px' }}>
-            {/* 发布页 */}
-            <Route path={[router.publish.root, `${router.publish.root}${router.publish.fix}`]}>
-              <PublishPage style={contentStyle} />
-            </Route>
-            {/* 信息管理页 */}
-            <Route path={router.infoImport}>
-              <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
-                信息管理!!!
-              </div>
-            </Route>
-            {/* 默认的作业浏览页 */}
-            <Route path={router.browse.root}>
-              <AssignmentBrowsePage style={contentStyle} />
-            </Route>
-            {/* 无根页面直接重定向到浏览页 */}
-            <Route exact path={router.home}>
-              <Redirect to={router.browse.root} />
-            </Route>
-          </Content>
-          <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
-        </Layout>
+        <SiderLayout defaultSelect={defaultSelect} />
+        <MainContent />
       </Layout>
     </Switch>
   );
