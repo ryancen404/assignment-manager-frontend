@@ -1,7 +1,7 @@
 import { message } from "antd";
 import React from "react";
 import Global from "../../Global";
-import userService, { LoginParams } from "../../services/teacher/userService";
+import userService, { LoginParams, SignupParams } from "../../services/userService";
 import { LoginAction, LoginState } from "./type";
 
 export const initState: LoginState = {
@@ -50,6 +50,20 @@ export const onLogin = (account: string, password: string, type: 0 | 1, remember
     } else {
       message.error("账号或密码错误请重试")
     }
+    dispatch({
+      type: "setLoading",
+      isLoading: false
+    })
+  }
+}
+
+export const onSignup = (signupParams: SignupParams) => {
+  return async (dispatch: React.Dispatch<LoginAction>) => {
+    dispatch({
+      type: "setLoading",
+      isLoading: true
+    })
+    const result = await userService.signup(signupParams);
     dispatch({
       type: "setLoading",
       isLoading: false

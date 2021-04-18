@@ -1,6 +1,8 @@
-import { Button, Form, Input, Radio } from "antd";
+import { Button, Form, Input, message, Radio } from "antd";
 import React, { useContext } from "react";
 import { LoginContext } from "..";
+import { SignupParams } from "../../../services/userService";
+import { onSignup } from "../reducer";
 import { LoginAction, LoginContextType } from "../type";
 import "./SignupForm.css"
 
@@ -33,6 +35,31 @@ const SignupForm = () => {
 
   const onFinish = (values: any) => {
     console.log('Received values of form: ', values);
+    if (values.type === "学生") {
+      if (values.class === undefined || values.class.trim() === "") {
+        message.error("请输入正确的班级号");
+        return;
+      }
+      const numberAccount = Number(values.account);
+      if (isNaN(numberAccount)) {
+        message.error("请输入正确的学号");
+        return;
+      }
+    } else {
+      if (values.account.trim().indexOf("@") === -1) {
+        message.error("请输入正确的邮箱格式")
+        return;
+      }
+    }
+    const signupParams: SignupParams = {
+      account: values.account,
+      password: values.password,
+      username: values.name,
+      type: values.type === "学生" ? 1 : 0,
+      college: values.college,
+      class: values.class
+    }
+    context.dispatch!(onSignup(signupParams))
   };
 
   const onClickLogin = () => {
@@ -51,12 +78,12 @@ const SignupForm = () => {
         onFinish={onFinish}
         scrollToFirstError>
         <Form.Item
-          name="email"
+          name="account"
           label="账号"
           rules={[
             {
               required: true,
-              message: '请输入你的邮箱!',
+              message: '请输入你的邮箱或学号!',
             },
           ]}>
           <Input placeholder="请输入邮箱或学号" />
@@ -110,8 +137,14 @@ const SignupForm = () => {
           rules={[{ required: true, message: '请输入学院信息!', whitespace: false }]}>
           <Input />
         </Form.Item>
+        <Form.Item
+          name="class"
+          label="班级"
+          rules={[{ required: false, whitespace: false }]}>
+          <Input placeholder="如果是学生请输入班级号" />
+        </Form.Item>
         <Form.Item name="type" {...{ wrapperCol: { span: 24, offset: 2 } }}>
-          <Radio.Group defaultValue={"教师"}>
+          <Radio.Group defaultValue="教师">
             <Radio value="教师">教师</Radio>
             <Radio value="学生">学生</Radio>
           </Radio.Group>
