@@ -15,6 +15,7 @@ import PublishPage from '../Publish/index';
 import InfoManagerPage from '../Info';
 import LoginPage from '../Login';
 import Global from '../../Global';
+import AxiosInstane from '../../services/config.service';
 
 const { Sider, Content, Footer } = Layout;
 
@@ -86,6 +87,12 @@ const Home: FC = () => {
 
   // render count
   console.log("!Home render!");
+
+  // 设置全局token错误回调
+  AxiosInstane.setTokenErrorCallback(() => {
+    history.push("/login");
+    message.warning("登陆信息失效，请重新登陆！")
+  });
 
   // 判断当前默认选择的menu
   let defaultSelect = ['1']

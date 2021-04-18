@@ -1,4 +1,5 @@
 import axios from "axios";
+import { BaseResponse } from "./type";
 
 const loginUrl = '/api/login'
 const teacherUrl = '/api/user/teacher'
@@ -31,14 +32,10 @@ const login = async (loginParms: LoginParams): Promise<string> => {
  */
 const signup = async (signupParams: SignupParams): Promise<boolean> => {
   if (signupParams.type === 0) {
-    try {
-      const response = await axios.post(teacherUrl, signupParams);
-      console.log("signup res:", response);
-    } catch (error) {
-      console.log(error);
-    }
+    const response = await axios.post<BaseResponse>(teacherUrl, signupParams);
+    console.log("signup res:", response);
   } else {
-
+    const reponse = await axios.post<BaseResponse>(studentUrl, signupParams);
   }
   return Promise.resolve(true);
 }
