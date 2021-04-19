@@ -15,7 +15,7 @@ import PublishPage from '../Publish/index';
 import InfoManagerPage from '../Info';
 import LoginPage from '../Login';
 import Global from '../../Global';
-import AxiosInstane from '../../services/config.service';
+import Axios from '../../services/config.service';
 
 const { Sider, Content, Footer } = Layout;
 
@@ -89,8 +89,8 @@ const Home: FC = () => {
   console.log("!Home render!");
 
   // 设置全局token错误回调
-  AxiosInstane.setTokenErrorCallback(() => {
-    history.push("/login");
+  Axios.setTokenErrorCallback(() => {
+    history.push(router.login);
     message.warning("登陆信息失效，请重新登陆！")
   });
 

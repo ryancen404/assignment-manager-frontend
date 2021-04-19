@@ -1,4 +1,4 @@
-import { DispatchType } from "../../utils/reducerHelper"
+import { DispatchType } from "../../other/reducer.config"
 
 export type LoginContextType = {
   state?: LoginState,

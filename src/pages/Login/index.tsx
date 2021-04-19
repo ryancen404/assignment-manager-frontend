@@ -1,6 +1,8 @@
-import { Spin } from "antd";
+import { message, Spin } from "antd";
 import React, { Reducer, useReducer } from "react";
-import { supportAsyncDispatch } from "../../utils/reducerHelper";
+import { useHistory } from "react-router";
+import { supportAsyncDispatch } from "../../other/reducer.config";
+import { router } from "../../router";
 import LoginForm from "./components/LoginForm";
 import SignupForm from "./components/SignupForm";
 import "./index.css"
@@ -12,8 +14,18 @@ export const LoginContext = React.createContext<LoginContextType>({})
 
 const LoginPage: React.FC = () => {
   const [state, defDispatch] = useReducer<Reducer<LoginState, LoginAction>>(reducer, initState)
+  const history = useHistory();
+
   // 支持异步函数
   const dispatch = supportAsyncDispatch<LoginAction>(defDispatch)
+
+  // 监听是否登陆成功
+  if (state.isLogin) {
+    history.push(router.home);
+    message.info("登陆成功!")
+    return null
+  }
+
   return (
     <LoginContext.Provider value={{ state, dispatch }}>
       <div className="Container">

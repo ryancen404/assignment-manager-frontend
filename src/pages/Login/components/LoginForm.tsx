@@ -1,17 +1,11 @@
 import { Button, Checkbox, Form, Input, message, Radio } from "antd";
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import React, { useContext, useState } from "react";
+import { useContext } from "react";
 import "./LoginForm.css";
 import { LoginAction, LoginContextType } from "../type";
 import { LoginContext } from "..";
 import { onLogin } from "../reducer";
 
-const formItemLayout = {
-  wrapperCol: {
-    xs: { span: 20 },
-    sm: { span: 30 },
-  },
-};
 
 const LoginForm = () => {
   const context = useContext<LoginContextType>(LoginContext);

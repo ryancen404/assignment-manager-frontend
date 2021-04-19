@@ -20,8 +20,9 @@ const init = () => {
     return response;
   }, error => {
     logger("response error:", error);
-    if (error.response.status >= 500) {
-      message.error("服务端错误，请重试！")
+    // 约定>500是服务内部错误
+    if (error.response.status >= StatusCode.serverError) {
+      message.error("服务端错误，请重试！");
     }
     return Promise.reject(error);
   })
@@ -43,7 +44,7 @@ const setTokenErrorCallback = (callback: () => void) => {
   instance.interceptors.response.use(response => {
     return response;
   }, error => {
-    if (error.response.status === 401) {
+    if (error.response.status === StatusCode.tokenError) {
       logger("the 401 token error");
       callback();
     }
@@ -51,11 +52,26 @@ const setTokenErrorCallback = (callback: () => void) => {
   })
 }
 
-const AxiosInstane = {
+// 服务端约定的HTTP错误
+export const StatusCode = {
+  parmasError: 400,
+  tokenError: 401,
+  serverError: 500
+}
+
+// 业务状态
+export const StateCode = {
+  success: 1,
+  fail: 0
+}
+
+const Axios = {
   instance,
   init,
   setRequestToken,
-  setTokenErrorCallback
+  setTokenErrorCallback,
+  StatusCode,
+  StateCode,
 }
 
-export default AxiosInstane;
+export default Axios;

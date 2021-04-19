@@ -1,4 +1,5 @@
 import axios from "axios";
+import Axios from "./config.service";
 import { BaseResponse } from "./type";
 
 const loginUrl = '/api/login'
@@ -21,23 +22,30 @@ export interface SignupParams {
   class?: string,
 }
 
-const login = async (loginParms: LoginParams): Promise<string> => {
-  // const response = await axios.post(`${baseUrl}`)
-  return Promise.resolve("token");
+
+/**
+ * 
+ * @param loginParms 登陆参数
+ * @returns 返回携带Token的Response
+ */
+const login = async (loginParms: LoginParams): Promise<BaseResponse<string>> => {
+  const response = await Axios.instance.post<BaseResponse<string>>(loginUrl, loginParms);
+  return response.data;
 }
 
 /**
  * 注册新用户
  * @returns 
  */
-const signup = async (signupParams: SignupParams): Promise<boolean> => {
+const signup = async (signupParams: SignupParams): Promise<BaseResponse> => {
+  let response;
   if (signupParams.type === 0) {
-    const response = await axios.post<BaseResponse>(teacherUrl, signupParams);
+    response = await Axios.instance.post<BaseResponse>(teacherUrl, signupParams);
     console.log("signup res:", response);
   } else {
-    const reponse = await axios.post<BaseResponse>(studentUrl, signupParams);
+    response = await Axios.instance.post<BaseResponse>(studentUrl, signupParams);
   }
-  return Promise.resolve(true);
+  return response.data;
 }
 
 
