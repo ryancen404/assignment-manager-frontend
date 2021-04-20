@@ -20,3 +20,8 @@ export const supportAsyncDispatch = <ActionType>(
     return defDispatch(action);
   }
 }
+
+export type ActionWithLoading = {
+  type: "setLoading",
+  isLoading: boolean
+}

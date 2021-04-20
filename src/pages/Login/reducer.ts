@@ -32,6 +32,7 @@ export const reducer = (state: LoginState, action: LoginAction): LoginState => {
   }
 }
 
+// 登陆异步action
 export const onLogin = (account: string, password: string, type: 0 | 1, remember: boolean) => {
   return async (dispatch: React.Dispatch<LoginAction>) => {
     dispatch({

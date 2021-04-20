@@ -1,5 +1,5 @@
-import { Empty, Result, ResultProps } from "antd"
-import { CSSProperties, ReactNode } from "react"
+import { Empty, Result, ResultProps, Spin } from "antd"
+import { CSSProperties } from "react"
 
 export interface EmptyWrapperProps {
   style?: CSSProperties
@@ -9,15 +9,22 @@ export interface EmptyWrapperProps {
   content: JSX.Element,
   // 请求错误
   errorContent?: ResultProps
-  // 是否展示空数据
-  isShowError: boolean
+  // 是否展示错误
+  isShowError: boolean,
+  // 设置loading状态
+  isLoading: boolean
 }
 
-const renderContent = (props: EmptyWrapperProps)=> {
+
+const renderContent = (props: EmptyWrapperProps) => {
+  // 如果loading保证其他状态不被显示
+  if (props.isLoading) {
+    return null
+  }
   if (props.isShowError) {
-    return <Result {...props.errorContent}/>
-  }else if (props.isShowEmpty) {
-    return <Empty/>
+    return <Result {...props.errorContent} />
+  } else if (props.isShowEmpty) {
+    return <Empty />
   } else {
     return props.content
   }
@@ -26,7 +33,9 @@ const renderContent = (props: EmptyWrapperProps)=> {
 const StatusWrapper = (props: EmptyWrapperProps) => {
   return (
     <div style={props.style}>
-      {renderContent(props)}
+      <Spin size="large" spinning={props.isLoading}>
+        {renderContent(props)}
+      </Spin>
     </div>
   )
 }

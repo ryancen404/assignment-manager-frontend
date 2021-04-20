@@ -1,21 +1,30 @@
 import { Space, Table, Tag } from 'antd';
-import { CSSProperties, useEffect, useState } from 'react';
+import React, { CSSProperties, Reducer, useEffect, useReducer, useState } from 'react';
 import { Route, Switch, useRouteMatch, Link } from "react-router-dom";
-
 import BrowseDetailPage from "./Detail";
-import { router } from "../../router" 
+import { router } from "../../router"
 import { AssignmentStatus, Assignment, DetailClass } from "../../types"
-
 import assignmentService from "../../services/teacher/assignment";
 import { ColumnsType } from 'antd/lib/table/Table';
+import { BrowseAction, BrowseContextType, BrowseState } from './types';
+import { initState, reducer } from './reducer';
+import { supportAsyncDispatch } from '../../other/reducer.config';
 
-interface BrowseProps {
+export interface BrowseProps {
   style: CSSProperties,
 }
 
-const log = (...message: any[]) => console.log("AssignmentBrowsePage", message)
+// 浏览页Context
+export const BrowseContext = React.createContext<BrowseContextType>({});
+
+
+const log = (...message: any[]) => console.log("[AssignmentBrowsePage] =>", message)
 
 const AssignmentBrowsePage = (props: BrowseProps) => {
+  const [state, defDispatch] = useReducer<Reducer<BrowseState, BrowseAction>>(reducer, initState);
+
+  const dispatch = supportAsyncDispatch<BrowseAction>(defDispatch);
+
   const [assignments, setAssignments] = useState<Assignment[]>([])
   const match = useRouteMatch(router.browse.root)
   log("match: ", match?.path);
@@ -44,9 +53,9 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
       dataIndex: 'classs',
       render: (record: DetailClass[]) => {
         log("render.", record)
-        return(
+        return (
           <>
-            {record.map(clazz => 
+            {record.map(clazz =>
               <p>{clazz.className}</p>
             )}
           </>
@@ -95,17 +104,19 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
   }
 
   return (
-    <div style={props.style}>
-      <Switch>
-        {/* 点击后的作业详情页 :assignId作业Id */}
-        <Route path={`${match?.path}${router.browse.detail}`}>
-          <BrowseDetailPage />
-        </Route>
-        <Route path={match?.path}>
-          <Table columns={columns} dataSource={assignments} />
-        </Route>
-      </Switch>
-    </div>
+    <BrowseContext.Provider value={{ state, dispatch }}>
+      <div style={props.style}>
+        <Switch>
+          {/* 点击后的作业详情页 :assignId作业Id */}
+          <Route path={`${match?.path}${router.browse.detail}`}>
+            <BrowseDetailPage />
+          </Route>
+          <Route path={match?.path}>
+            <Table columns={columns} dataSource={assignments} />
+          </Route>
+        </Switch>
+      </div>
+    </BrowseContext.Provider>
   )
 }
 
