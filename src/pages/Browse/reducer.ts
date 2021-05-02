@@ -23,7 +23,7 @@ export const initialData = () => {
       try {
         const data = await assignmentService.getEasyAll();
       } catch (error) {
-
+        
       }
     })
   }

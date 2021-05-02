@@ -1,6 +1,7 @@
 import { Descriptions } from "antd";
 import { useContext } from "react";
-import { InfoContext, InfoContextType } from "..";
+import { InfoContext } from "..";
+import { InfoContextType } from "../type";
 
 const InfoHeaderContent = () => {
   const context = useContext<InfoContextType>(InfoContext)

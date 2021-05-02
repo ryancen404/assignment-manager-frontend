@@ -1,36 +1,18 @@
 // Info页面的reducer
 
 import { message } from "antd";
-import { DispatchType } from ".";
-import classService from "../../services/teacher/class";
-import { ClassBrowse, ClassStudent } from "../../types";
-
-export interface InfoState {
-  tabKey: string
-  class: ClassBrowse[]
-  // student: []
-}
+import React from "react";
+import { DispatchType } from "../../other/reducer.config";
+import classService, { DeleteClassStudentParams } from "../../services/teacher/class";
+import { InfoAction, InfoState } from "./type";
 
 export const initState: InfoState = {
   tabKey: "0",
+  isLoading: false,
   class: []
 }
 
-export type Action = {
-  // 切换tab
-  type: "changeTab",
-  index: string
-} | {
-  // 初始化请求
-  type: "initialClass",
-  data: ClassBrowse[]
-} | {
-  // 删除某个学生
-  type: "onDeleteStudent",
-  sId: string,
-}
-
-export const reducer = (state: InfoState, action: Action): InfoState => {
+export const reducer = (state: InfoState, action: InfoAction): InfoState => {
   console.log("reduce an action:", action);
   switch (action.type) {
     case "changeTab":
@@ -48,6 +30,9 @@ export const reducer = (state: InfoState, action: Action): InfoState => {
         clazz => clazz.classId === newClass.classId ? newClass : clazz
       )
       return { ...state, class: newStateClass }
+    case "setLoading": {
+      return { ...state, isLoading: action.isLoading }
+    }
     default:
       return state;
   }
@@ -56,28 +41,52 @@ export const reducer = (state: InfoState, action: Action): InfoState => {
 /**
  * 初始化
  */
-export const initialClassData = (tid: string) => {
-  return async (dispatch: DispatchType) => {
-    const classs = await classService.getAllClass(tid);
-    console.log("request classs length:", classs.length);
+export const initialClassData = () => {
+  return async (dispatch: React.Dispatch<InfoAction>) => {
     dispatch({
-      type: "initialClass",
-      data: classs
+      type: "setLoading",
+      isLoading: true
+    })
+    try {
+      const response = await classService.getAllClass();
+      let classs = response.content;
+      console.log("request classs length:", classs?.length);
+      if (classs === null) {
+        classs = []
+      }
+      dispatch({
+        type: "initialClass",
+        data: classs
+      })
+    } catch (error) {
+      message.error("请求失败，请重试！")
+    }
+    dispatch({
+      type: "setLoading",
+      isLoading: false
     })
   }
 }
 
-export const onDeleteStudent = (sId: string) => {
-  return async (dispatch: DispatchType) => {
-    const result = await classService.deleteStudent(sId);
-    console.log("request delete student result:", result);
-    if (!result) {
+export const onDeleteStudent = (classId: string, sId: string) => {
+  return async (dispatch: React.Dispatch<InfoAction>) => {
+    try {
+      const params: DeleteClassStudentParams = {
+        classId, sId
+      }
+      const result = await classService.deleteStudent(params);
+      console.log("request delete student result:", result);
+      if (result.code === 0) {
+        message.error("删除失败！")
+        return
+      }
+      dispatch({
+        type: "onDeleteStudent",
+        sId,
+      })
+    } catch (error) {
       message.error("删除失败！")
       return
     }
-    dispatch({
-      type: "onDeleteStudent",
-      sId,
-    })
   }
 }

@@ -70,10 +70,6 @@ export interface ClassStudent {
   studentNumber: string,
   // 学生姓名
   studentName: string,
-  // 班级名
-  className: string,
-  // 班级号
-  classNumber: string,
   // 年级
   grade: string
 }

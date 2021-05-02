@@ -12,7 +12,7 @@ const LoginForm = () => {
 
   const onFinish = (values: any) => {
     console.log('Received values of form: ', values);
-    const type = values.type === "教师" ? 0 : 1;
+    const type = values.type === "学生" ? 1 : 0;
     context.dispatch!(onLogin(values.account, values.password, type, values.remember))
   };
 

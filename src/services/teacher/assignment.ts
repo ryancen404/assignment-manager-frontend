@@ -1,16 +1,20 @@
 import { Assignment } from "../../types";
 
 // todo: delete fake data
-import { fakeAssignmentData, fakeAssignment } from "../../mockData";
+import { fakeAssignment } from "../../mockData";
+import Axios from "../config.service";
 
 const baseUrl = "/api/assignment"
+
 
 /**
  * 作业浏览页请求 Assignment 数组
  * 这里Assignment对象是专门为浏览页的简易Assignment，Class数组对象不含学生信息
+ * Token里包含id和用户类型
  */
-const getEasyAll = (tid: string): Assignment[] => {
-  return fakeAssignmentData;
+const getEasyAll = (): Assignment[] => {
+  // Axios.instance.get(baseUrl);
+  return[]
 }
 
 /**

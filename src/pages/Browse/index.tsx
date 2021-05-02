@@ -99,8 +99,8 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
   // 请求, todo: loading 状态？
   const requestAllAssignment = () => {
     // todo delete
-    const allAssignment = assignmentService.getEasyAll("my_tid");
-    setAssignments(allAssignment)
+    // const allAssignment = assignmentService.getEasyAll("my_tid");
+    // setAssignments(allAssignment)
   }
 
   return (

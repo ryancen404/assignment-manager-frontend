@@ -1,12 +1,13 @@
 import { Button, Space, Table } from "antd"
 import React, { useContext, useEffect } from "react";
-import { InfoContext, InfoContextType } from "..";
+import { InfoContext } from "..";
 import StatusWrapper from "../../../components/StatusWrapper";
 import { ClassBrowse, ClassStudent } from "../../../types";
 import { initialClassData, onDeleteStudent } from "../reducer";
+import { InfoContextType } from "../type";
 
 const getColumns = (
-  onDelete: (sid: string) => void
+  onDelete: (classId: string, sid: string) => void
 ) => {
   return [
     {
@@ -20,14 +21,19 @@ const getColumns = (
       dataIndex: 'studentNumber',
     },
     {
-      title: '年级',
-      key: "grade",
-      dataIndex: 'grade',
-    },
-    {
       title: '班级',
       key: "className",
       dataIndex: 'className',
+    },
+    {
+      title: '班级号',
+      key: "classNumber",
+      dataIndex: "classNumber"
+    },
+    {
+      title: '年级',
+      key: "grade",
+      dataIndex: 'grade',
     },
     {
       title: '操作',
@@ -35,12 +41,17 @@ const getColumns = (
       render: (text: string, record: ClassStudent) => {
         return (
           <Space size="small">
-            <Button type="link" onClick={() => onDelete(record.sId)}>删除</Button>
+            <Button type="link" onClick={() => onDelete(record.classId, record.sId)}>删除</Button>
           </Space>
         )
       },
     },
   ];
+}
+
+type StudentWithClass = ClassStudent & {
+  className?: string,
+  classNumber?: string
 }
 
 /**
@@ -50,30 +61,36 @@ const getColumns = (
 const InfoContent = () => {
   const context = useContext<InfoContextType>(InfoContext)
 
-  useEffect(() => {
-    console.log("useEffect");
-    context.dispatch!(initialClassData("tid"))
-  }, [])
-
   console.log("current state", context.state);
 
   const currentIndex = Number(context.state?.tabKey)
   const classs: ClassBrowse[] | undefined = context.state?.class
-  const students: ClassStudent[] | undefined = classs?.[Number(currentIndex)]?.students;
+  const currentClass = classs?.[Number(currentIndex)];
+  const students: ClassStudent[] | undefined = currentClass?.students;
+
+  const showStudents = students?.map(s => {
+    const stu: StudentWithClass = {
+      ...s,
+      className: currentClass?.className,
+      classNumber: currentClass?.classNumber
+    }
+    return stu;
+  })
 
   // 点击列表删除回调
-  const onDelete = (sId: string) => {
-    context.dispatch!(onDeleteStudent(sId))
+  const onDelete = (classId: string, sId: string) => {
+    context.dispatch!(onDeleteStudent(classId, sId))
   }
 
   return (
     <div>
       <StatusWrapper
-      // todo: set request state
+        // todo: set request state
+        isLoading={false}
         isShowError={false}
         isShowEmpty={students === undefined || students.length === 0}
         content={
-          <Table columns={getColumns(onDelete)} dataSource={students} />
+          <Table columns={getColumns(onDelete)} dataSource={showStudents} />
         } />
     </div>
   )
