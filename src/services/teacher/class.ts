@@ -31,7 +31,7 @@ export interface DeleteClassStudentParams {
  * 删除班级上的一个学生
  */
 const deleteStudent = async (params: DeleteClassStudentParams): Promise<BaseResponse> => {
-    const response = await Axios.instance.post<BaseResponse>(`${classUrl}/${params.classId}`, params.sId)
+    const response = await Axios.instance.post<BaseResponse>(`${classUrl}/${params.classId}`, {...params});
     return response.data
 }
 
