@@ -17,7 +17,7 @@ const LoginPage: React.FC = () => {
   const history = useHistory();
 
   // 支持异步函数
-  const dispatch = supportAsyncDispatch<LoginAction>(defDispatch)
+  const dispatch = supportAsyncDispatch<LoginAction>(defDispatch);
 
   // 监听是否登陆成功
   if (state.isLogin) {

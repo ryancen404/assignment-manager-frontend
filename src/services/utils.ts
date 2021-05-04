@@ -1,14 +1,8 @@
-import { message } from "antd";
 
-export const requestWraaper = (block: () => void) => {
-    try {
-        block();
-    } catch (error) {
-       toastFailMessage(error);
-    }
+export function getRandomInt(max: number) {
+    return Math.floor(Math.random() * max);
 }
 
-export const toastFailMessage = (error?: any) => {
-    console.error("network fail! the error:", error);
-    message.error("请求失败，请重试！")
+export function isNull(object: any): object is null {
+    return object === undefined || object === null
 }

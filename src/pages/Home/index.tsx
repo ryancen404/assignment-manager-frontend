@@ -10,8 +10,8 @@ import {
 import "./index.css"
 import { router } from '../../router';
 import FixHeader from './components/FixHeader';
-import AssignmentBrowsePage from "../Browse/index";
-import PublishPage from '../Publish/index';
+import AssignmentBrowsePage from "../Browse/index.browse";
+import PublishPage from '../Publish/index.publish';
 import InfoManagerPage from '../Info';
 import LoginPage from '../Login';
 import Global from '../../Global';
@@ -25,6 +25,8 @@ const { Sider, Content, Footer } = Layout;
  */
 const SiderLayout = ({ defaultSelect }: { defaultSelect: string[] }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [select, setSelect] = useState(Global.currSelectIndex);
+
   return (
     <Sider
       collapsible
@@ -33,7 +35,15 @@ const SiderLayout = ({ defaultSelect }: { defaultSelect: string[] }) => {
       <div className="logo" >
         <h1>高校作业管理系统</h1>
       </div>
-      <Menu theme="dark" defaultSelectedKeys={defaultSelect} mode="inline">
+      <Menu theme="dark"
+        onClick={({ key }) => {
+          console.log("on menu click:", key);
+          Global.currSelectIndex = key.toString();
+          setSelect(key.toString());
+        }}
+        defaultSelectedKeys={defaultSelect}
+        mode="inline"
+        selectedKeys={[select]}>
         <Menu.Item key="1" icon={<PieChartOutlined />} >
           <Link to={router.browse.root}>作业浏览</Link>
         </Menu.Item>
@@ -91,7 +101,8 @@ const Home: FC = () => {
   // 设置全局token错误回调
   Axios.setTokenErrorCallback(() => {
     history.push(router.login);
-    message.warning("登陆信息失效，请重新登陆！")
+    Global.currSelectIndex = "1";
+    message.warning("登陆信息失效，请重新登陆！");
   });
 
   // 判断当前默认选择的menu

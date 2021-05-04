@@ -1,11 +1,18 @@
-import { DatePicker, Form, Input, Select, Upload } from "antd"
+import { DatePicker, Form, Input, Select, Upload, UploadProps } from "antd"
 import { InboxOutlined } from '@ant-design/icons';
-import React from "react"
+import React, { useContext } from "react"
 import { Assignment } from "../../../types";
 import moment from "moment";
+import Global from "../../../Global";
+import { UploadChangeParam } from "antd/lib/upload";
+import { PublishContextType } from "../type.publish";
+import { PublishContext } from "../index.publish";
 
 const { Option } = Select;
 
+/**
+ * 修改作业时会传的默认作业参数
+ */
 export interface DefaultProps {
     defaultAssignment?: Assignment
 }
@@ -40,6 +47,9 @@ export const DesItem = (props: DefaultProps) => {
 
 // 班级选择Item
 export const ClassItem = (props: DefaultProps) => {
+    const context = useContext<PublishContextType>(PublishContext);
+    const classes = context.state?.classes;
+
     return <Form.Item
         name="class"
         label="选择班级"
@@ -49,18 +59,45 @@ export const ClassItem = (props: DefaultProps) => {
             allowClear
             mode="multiple"
             placeholder="请选择该作业发布的班级">
-            <Option value={"班级1"}>班级1</Option>
-            <Option value={"班级2"}>班级2</Option>
-            <Option value={"班级3"}>班级3</Option>
+            {classes?.map(clazz =>
+                <Option value={clazz.classId}>{clazz.className}</Option>
+            )}
         </Select>
     </Form.Item>;
 }
 
 export const FileItem = () => {
+    const context = useContext<PublishContextType>(PublishContext);
+
+    const onUploadChange = (info: UploadChangeParam) => {
+        console.log("onUploadChange:", info);
+        if (info.file.status === "done" && info.file.response !== null) {
+            const response = info.file.response;
+            if (response.code === 1) {
+                context.dispatch!({
+                    type: "appendFileNames",
+                    fileName: response.content
+                })
+            }
+        }
+    }
+    const uploadProps: UploadProps = {
+        name: "tempAttachment",
+        action: '/api/files/assignment/attachment',
+        headers: {
+            Authorization: Global.getGlobalToken()!,
+            ContentType: "multipart/form-data"
+        },
+        method: "POST",
+        onChange: onUploadChange
+    }
+
+    console.log("the upload session: ", uploadProps.name);
+
     return (
         <Form.Item label="上传附件">
             <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
-                <Upload.Dragger name="files" action="/upload.do">
+                <Upload.Dragger {...uploadProps}>
                     <p className="ant-upload-drag-icon">
                         <InboxOutlined />
                     </p>

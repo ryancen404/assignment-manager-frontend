@@ -5,12 +5,13 @@ export interface EmptyWrapperProps {
   style?: CSSProperties
   // 是否展示空数据
   isShowEmpty: boolean,
+  emptyDes?: string,
   // 正常显示的内容
   content: JSX.Element,
   // 请求错误
   errorContent?: ResultProps
   // 是否展示错误
-  isShowError: boolean,
+  isShowError?: boolean,
   // 设置loading状态
   isLoading: boolean
 }
@@ -24,7 +25,7 @@ const renderContent = (props: EmptyWrapperProps) => {
   if (props.isShowError) {
     return <Result {...props.errorContent} />
   } else if (props.isShowEmpty) {
-    return <Empty />
+    return <Empty description={<div>{props.emptyDes}</div>} />
   } else {
     return props.content
   }
@@ -45,7 +46,8 @@ StatusWrapper.defaultProps = {
     status: 404,
     title: "404",
     subTitle: "抱歉，出了点问题。"
-  }
+  },
+  isShowError: false
 }
 
 export default StatusWrapper;

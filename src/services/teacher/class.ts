@@ -1,6 +1,6 @@
 // 班级相关请求
 import { fakeClass } from "../../mockData"
-import { ClassBrowse, DetailClass } from "../../types";
+import { BaseClass, ClassBrowse, DetailClass } from "../../types";
 import Axios from "../config.service";
 import { BaseResponse } from "../type";
 
@@ -22,6 +22,15 @@ const getAllClass = async (): Promise<BaseResponse<ClassBrowse[]>> => {
     return response.data;
 }
 
+/**
+ * 发布页需要的班级选择栏信息
+ * @returns 获取基础的班级信息
+ */
+const getBaseClasses = async (): Promise<BaseResponse<BaseClass[]>> => {
+    const response = await Axios.instance.get<BaseResponse<BaseClass[]>>(`${classUrl}/easy`);
+    return response.data;
+}
+
 export interface DeleteClassStudentParams {
     sId: string,
     classId: string
@@ -31,14 +40,15 @@ export interface DeleteClassStudentParams {
  * 删除班级上的一个学生
  */
 const deleteStudent = async (params: DeleteClassStudentParams): Promise<BaseResponse> => {
-    const response = await Axios.instance.post<BaseResponse>(`${classUrl}/${params.classId}`, {...params});
+    const response = await Axios.instance.post<BaseResponse>(`${classUrl}/${params.classId}`, { ...params });
     return response.data
 }
 
 const classService = {
     getClassById,
     getAllClass,
-    deleteStudent
+    deleteStudent,
+    getBaseClasses
 }
 
 export default classService;

@@ -21,7 +21,7 @@ const init = () => {
   }, error => {
     logger("response error:", error);
     // 约定>500是服务内部错误
-    if (error.response.status >= StatusCode.serverError) {
+    if (error.response.code >= StatusCode.serverError) {
       message.error("服务端错误，请重试！");
     }
     return Promise.reject(error);
@@ -44,7 +44,7 @@ const setTokenErrorCallback = (callback: () => void) => {
   instance.interceptors.response.use(response => {
     return response;
   }, error => {
-    if (error.response.status === StatusCode.tokenError) {
+    if (error.response.code === StatusCode.tokenError) {
       logger("the 401 token error");
       callback();
     }

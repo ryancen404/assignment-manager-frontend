@@ -1,11 +1,9 @@
 import { Button, Modal, Popconfirm, Space, Upload, UploadProps } from "antd";
 import React, { useContext, useState } from "react";
 import { UploadOutlined } from '@ant-design/icons';
-import { requestWraaper } from "../../../services/utils";
 import Global from "../../../Global";
 import { UploadChangeParam } from "antd/lib/upload";
 import { InfoContextType } from "../type";
-import InfoContent from "./InfoContent";
 import { InfoContext } from "..";
 import { initialClassData } from "../reducer";
 
@@ -24,9 +22,6 @@ export const ClearAll = () => {
     //   setVisible(false);
     //   setConfirmLoading(false);
     // }, 2000);
-    requestWraaper(async () => {
-      // const isSuucess = await assignmentService.deleteAssignment(assignId);
-    })
     setVisible(false);
     setConfirmLoading(false);
   };

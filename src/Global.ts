@@ -1,10 +1,13 @@
 // 全局App配置信息
+import React from "react";
 import Axios from "./services/config.service";
 const APP_NAME = "assignment-manager"
 const TOKEN_KEY = APP_NAME + "_token";
 
 // 全局Token
 let globalToken: string | null = null
+
+let currSelectIndex: React.Key = "1";
 
 /**
  * 在整个React App初始化时调用
@@ -28,6 +31,7 @@ const setToken = (token: string) => {
   globalToken = token;
 }
 
+
 const getGlobalToken = () => globalToken;
 
 const isLogin = () => globalToken !== null
@@ -37,7 +41,8 @@ const Global = {
   setToken,
   storageToken,
   getGlobalToken,
-  isLogin
+  isLogin,
+  currSelectIndex
 }
 
 export default Global;

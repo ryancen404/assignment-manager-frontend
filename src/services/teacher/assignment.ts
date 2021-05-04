@@ -3,6 +3,7 @@ import { Assignment } from "../../types";
 // todo: delete fake data
 import { fakeAssignment } from "../../mockData";
 import Axios from "../config.service";
+import { BaseResponse } from "../type";
 
 const baseUrl = "/api/assignment"
 
@@ -10,11 +11,10 @@ const baseUrl = "/api/assignment"
 /**
  * 作业浏览页请求 Assignment 数组
  * 这里Assignment对象是专门为浏览页的简易Assignment，Class数组对象不含学生信息
- * Token里包含id和用户类型
  */
-const getEasyAll = (): Assignment[] => {
-  // Axios.instance.get(baseUrl);
-  return[]
+const getEasyAll = async () => {
+  const response = await Axios.instance.get<BaseResponse<Assignment[]>>(baseUrl);
+  return response.data
 }
 
 /**
@@ -25,12 +25,22 @@ const getAssignmentDeatil = (assignId: string): Assignment => {
   return fakeAssignment;
 }
 
+
+export interface NewAssignmentParams {
+  name: string,
+  startTime: number,
+  endTime: number,
+  desc?: string,
+  classIds: string[],
+  filesName: string[]
+}
 /**
  * 创建新的Assignment
  * @param assignment 新的作业
  */
-const createAssignmentDetail = (assignment: Assignment) => {
-  return true;
+const createAssignment = async (assignment: NewAssignmentParams) => {
+  const response = await Axios.instance.post<BaseResponse>(baseUrl, assignment);
+  return response.data;
 }
 
 /**
@@ -54,7 +64,7 @@ const deleteAssignment = (assignId: string) => {
 const assignmentService = {
   getEasyAll,
   getAssignmentDeatil,
-  createAssignmentDetail,
+  createAssignment,
   signAssignmentComplete,
   deleteAssignment
 }

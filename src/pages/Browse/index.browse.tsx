@@ -3,12 +3,13 @@ import React, { CSSProperties, Reducer, useEffect, useReducer, useState } from '
 import { Route, Switch, useRouteMatch, Link } from "react-router-dom";
 import BrowseDetailPage from "./Detail";
 import { router } from "../../router"
-import { AssignmentStatus, Assignment, DetailClass } from "../../types"
+import { AssignmentStatus, Assignment, DetailClass, BaseClass } from "../../types"
 import assignmentService from "../../services/teacher/assignment";
 import { ColumnsType } from 'antd/lib/table/Table';
-import { BrowseAction, BrowseContextType, BrowseState } from './types';
-import { initState, reducer } from './reducer';
+import { BrowseAction, BrowseContextType, BrowseState } from './types.browse';
+import { initialAssignment, initState, reducer } from './reducer.browse';
 import { supportAsyncDispatch } from '../../other/reducer.config';
+import StatusWrapper from '../../components/StatusWrapper';
 
 export interface BrowseProps {
   style: CSSProperties,
@@ -25,13 +26,12 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
 
   const dispatch = supportAsyncDispatch<BrowseAction>(defDispatch);
 
-  const [assignments, setAssignments] = useState<Assignment[]>([])
   const match = useRouteMatch(router.browse.root)
   log("match: ", match?.path);
 
   // 首次执行请求作业列表数组
   useEffect(() => {
-    requestAllAssignment()
+    dispatch(initialAssignment());
   }, [])
 
   const columns: ColumnsType<Assignment> = [
@@ -51,7 +51,7 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
       title: '班级',
       key: "classs",
       dataIndex: 'classs',
-      render: (record: DetailClass[]) => {
+      render: (record: BaseClass[]) => {
         log("render.", record)
         return (
           <>
@@ -88,7 +88,7 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
       render: (text: string, record: Assignment) => {
         return (
           <Space size="small">
-            {record.status === '已结束' ? <a>批改</a> : null}
+            <a>批改</a>
             <a>删除</a>
           </Space>
         )
@@ -96,12 +96,9 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
     },
   ];
 
-  // 请求, todo: loading 状态？
-  const requestAllAssignment = () => {
-    // todo delete
-    // const allAssignment = assignmentService.getEasyAll("my_tid");
-    // setAssignments(allAssignment)
-  }
+  console.log("state.browseAssignment = ", state.browseAssignment);
+
+  const showAssignment = handleTime(state.browseAssignment);
 
   return (
     <BrowseContext.Provider value={{ state, dispatch }}>
@@ -112,12 +109,24 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
             <BrowseDetailPage />
           </Route>
           <Route path={match?.path}>
-            <Table columns={columns} dataSource={assignments} />
+            <StatusWrapper
+              isLoading={state.loading}
+              isShowEmpty={state.browseAssignment.length === 0}
+              emptyDes="还没有作业，快去发布吧～"
+              content={<Table columns={columns} dataSource={showAssignment} />}
+            />
           </Route>
         </Switch>
       </div>
     </BrowseContext.Provider>
   )
+}
+
+type ShowAssignment = Assignment & { timeFromTo: string }
+const handleTime = (assignments: Assignment[]) => {
+  return assignments.map((a): ShowAssignment => {
+    return { ...a, timeFromTo: `${a.startTime} - ${a.endTime}` }
+  })
 }
 
 // 作业浏览页，路由:"/"，详情页:"/browse/:assignId"

@@ -12,7 +12,7 @@ export interface Assignment extends BaseAssignment {
   classs: BaseClass[],
   // 当前作业状态，以时间区间作为状态依据
   status: AssignmentStatus,
-  // 是否已经被我(教师)批改, todo delete nullable
+  // 是否已经被我(教师)批改
   corrected?: boolean,
   // 附件列表
   files?: AssignmentFile[]

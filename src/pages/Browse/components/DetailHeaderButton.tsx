@@ -3,7 +3,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { router } from "../../../router";
 import assignmentService from "../../../services/teacher/assignment";
-import { requestWraaper } from "../../../services/utils";
 import { Assignment } from "../../../types";
 
 /**
@@ -26,9 +25,9 @@ export const DeleteButton = ({ assignId }: { assignId: string }) => {
         //   setVisible(false);
         //   setConfirmLoading(false);
         // }, 2000);
-        requestWraaper(async () => {
-            const isSuucess = await assignmentService.deleteAssignment(assignId);
-        })
+        // requestWraaper(async () => {
+        //     const isSuucess = await assignmentService.deleteAssignment(assignId);
+        // })
         setVisible(false);
         setConfirmLoading(false);
     };
@@ -75,9 +74,9 @@ export const CompleteButton = ({ assignId }: { assignId: string }) => {
         //   setVisible(false);
         //   setConfirmLoading(false);
         // }, 2000);
-        requestWraaper(async () => {
-            const isSuucess = await assignmentService.signAssignmentComplete(assignId);
-        })
+        // requestWraaper(async () => {
+        //     const isSuucess = await assignmentService.signAssignmentComplete(assignId);
+        // })
         setVisible(false);
         setConfirmLoading(false);
     };
