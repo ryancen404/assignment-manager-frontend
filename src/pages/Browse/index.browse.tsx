@@ -63,6 +63,11 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
       }
     },
     {
+      title: "完成情况",
+      key: "completion",
+      dataIndex: "completion",
+    },
+    {
       title: '状态',
       key: "status",
       dataIndex: 'status',
@@ -122,10 +127,14 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
   )
 }
 
-type ShowAssignment = Assignment & { timeFromTo: string }
+type ShowAssignment = Assignment & { timeFromTo: string, completion: string }
 const handleTime = (assignments: Assignment[]) => {
   return assignments.map((a): ShowAssignment => {
-    return { ...a, timeFromTo: `${a.startTime} - ${a.endTime}` }
+    return {
+      ...a,
+      timeFromTo: `${a.startTime} - ${a.endTime}`,
+      completion: `${a.complete}/${a.total}`
+    }
   })
 }
 

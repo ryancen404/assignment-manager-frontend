@@ -15,7 +15,9 @@ export interface Assignment extends BaseAssignment {
   // 是否已经被我(教师)批改
   corrected?: boolean,
   // 附件列表
-  files?: AssignmentFile[]
+  files?: AssignmentFile[],
+  total: number,
+  complete: number
 }
 
 export type AssignmentStatus = '未开始' | '进行中' | '已结束';
