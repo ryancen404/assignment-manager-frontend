@@ -1,7 +1,4 @@
-import { Assignment } from "../../types";
-
-// todo: delete fake data
-import { fakeAssignment } from "../../mockData";
+import { Assignment, DetailClass } from "../../types";
 import Axios from "../config.service";
 import { BaseResponse } from "../type";
 
@@ -21,8 +18,9 @@ const getEasyAll = async () => {
  * 通过Assignment唯一Id返回Assignment
  * @param assignId: Assignment唯一id
  */
-const getAssignmentDeatil = (assignId: string): Assignment => {
-  return fakeAssignment;
+const getAssignmentClass = async (assignId: string) => {
+  const response = await Axios.instance.get<BaseResponse<DetailClass[]>>(`${baseUrl}/class/${assignId}`);
+  return response.data;
 }
 
 
@@ -64,7 +62,7 @@ const deleteAssignment = async (assignId: string) => {
 
 const assignmentService = {
   getEasyAll,
-  getAssignmentDeatil,
+  getAssignmentClass,
   createAssignment,
   signAssignmentComplete,
   deleteAssignment

@@ -1,14 +1,12 @@
-import { Button, Space, Table, Tag } from 'antd';
-import React, { CSSProperties, Key, useEffect, useState } from 'react';
-import { StudentAssignment } from '../../../types';
-
-import classService from '../../../services/teacher/class';
+import { Button, message, Space, Table, Tag } from 'antd';
+import React, { CSSProperties, Key, useState } from 'react';
+import { DetailClass, StudentAssignment } from '../../../types';
 import ContentWrapper from '../../../components/ContentWrapper';
 import { TableRowSelection } from 'antd/lib/table/interface';
 
 export interface DetailContentProps {
     style: CSSProperties,
-    classId?: string
+    class?: DetailClass
 }
 
 export interface StudentAssignmentWithKey extends StudentAssignment {
@@ -29,7 +27,7 @@ const columns = [
     {
         title: "学生状态",
         key: "3",
-        dataIndex: "status",
+        dataIndex: "assignmentStatus",
         render: (record: boolean) => {
             let color = "red"
             let text = "未完成"
@@ -66,19 +64,28 @@ const columns = [
     {
         title: "操作",
         key: "6",
-        render: (text: string) => {
+        render: (text: string, record: StudentAssignmentWithKey) => {
             return (
                 <Space size="small">
-                    <a>预览作业</a>
-                    <Button type="link" onClick={onClickScoring}>打分</Button>
+                    <Button type="link" size="small" onClick={() => onPreview(record)}>预览作业</Button>
+                    <Button type="link" size="small" onClick={() =>onClickScoring(record)}>打分</Button>
                 </Space>
             )
         },
     }
 ];
 
-const onClickScoring = () => {
-    
+const onPreview = (record: StudentAssignmentWithKey) => {
+    if (!record.assignmentStatus) {
+        message.info(`${record.studentName}还没完成作业暂时无法预览`);
+    }
+    // todo download assignment
+}
+
+const onClickScoring = (record: StudentAssignmentWithKey) => {
+    if (!record.assignmentStatus) {
+        message.info(`${record.studentName}还没完成作业暂时无法打分`);
+    }
 }
 
 const getRowSelection = (
@@ -138,29 +145,18 @@ const getRowSelection = (
 const DetailContent: React.FC<DetailContentProps> = (props: DetailContentProps) => {
     console.log("DetailContent props:", props);
 
-    // 展示的学生信息数据
-    const [studentData, setStudentData] = useState<StudentAssignment[]>([])
+    const studentData = props.class?.students
+
     // 当前选择的学生对象
     const [selectedKeys, setSelectedKeys] = useState<Key[]>([])
 
-    useEffect(() => {
-        if (props.classId !== undefined) {
-            requestOneClass(props.classId)
-        }
-    }, [props.classId])
-
     // 带自增Key的数据
     // 如果要支持筛选功能必须加上key，否则数据错乱!!!!
-    const studentWithKeyData: StudentAssignmentWithKey[]
-        = studentData.map((element, index) => ({
+    const studentWithKeyData: StudentAssignmentWithKey[] | undefined
+        = studentData?.map((element, index) => ({
             key: index,
             ...element
         }))
-
-    const requestOneClass = (classId: string) => {
-        const result = classService.getClassById(classId)
-        setStudentData(result.studentsAssignment)
-    }
 
     /**
      * 当全选、单击时会被回调，注意对于自定义筛选规则得自己回调！！
@@ -173,7 +169,6 @@ const DetailContent: React.FC<DetailContentProps> = (props: DetailContentProps) 
     };
 
     const rowSelection = getRowSelection(studentWithKeyData, selectedKeys, setSelectedKeys, onChange);
-
 
     console.log("DetailContent studentData:", studentWithKeyData);
     console.log("DetailContent selectedKeys:", selectedKeys);

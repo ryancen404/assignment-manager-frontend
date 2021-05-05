@@ -2,12 +2,14 @@ import { message } from "antd";
 import React from "react";
 import assignmentService from "../../services/teacher/assignment";
 import { isNull } from "../../services/utils";
+import { DetailClass } from "../../types";
 import { BrowseAction, BrowseState } from "./types.browse";
 
 export const initState: BrowseState = {
   browseAssignment: [],
   loading: false,
-  deleteLoading: false
+  deleteLoading: false,
+  detailClassesMap: new Map<string, DetailClass[]>()
 }
 
 export const reducer = (state: BrowseState, action: BrowseAction): BrowseState => {
@@ -25,6 +27,10 @@ export const reducer = (state: BrowseState, action: BrowseAction): BrowseState =
     case "deleteSuccess": {
       const newAssignments = state.browseAssignment.filter(a => a.assignId !== action.assignId);
       return { ...state, browseAssignment: newAssignments };
+    }
+    case "appendDeatilMap": {
+      state.detailClassesMap.set(action.key, action.value);
+      return { ...state }
     }
     default:
       return { ...state }
@@ -51,6 +57,7 @@ export const initialAssignment = () => {
   }
 }
 
+// 删除作业
 export const onDeleteAssignment = (assignId: string) => {
   return async (dispatch: React.Dispatch<BrowseAction>) => {
     dispatch({ type: "deleteLoading", isLoading: true })
@@ -67,6 +74,23 @@ export const onDeleteAssignment = (assignId: string) => {
       deleteFail();
     }
     dispatch({ type: "deleteLoading", isLoading: false })
+  }
+}
+
+// 获取作业详情
+export const getAssignmentClasses = (assignId: string) => {
+  return async (dispatch: React.Dispatch<BrowseAction>) => {
+    try {
+      const response = await assignmentService.getAssignmentClass(assignId);
+      if (response.code === 1 && response.content) {
+        dispatch({ type: "appendDeatilMap", key: assignId, value: response.content })
+      } else {
+        getDetailFail();
+      }
+    } catch (error) {
+      console.log("getAssignmentDetail error:", error);
+      getDetailFail();
+    }
   }
 }
 
@@ -93,4 +117,8 @@ const blockWithLoading = async (dispatch: React.Dispatch<BrowseAction>, block: (
     type: "setLoading",
     isLoading: false
   })
+}
+
+function getDetailFail() {
+  message.error("获取作业失败！");
 }

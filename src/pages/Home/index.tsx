@@ -23,9 +23,21 @@ const { Sider, Content, Footer } = Layout;
  * 侧边栏Layout
  * @param 选择项
  */
-const SiderLayout = ({ defaultSelect }: { defaultSelect: string[] }) => {
+const SiderLayout = () => {
+  const history = useHistory();
   const [collapsed, setCollapsed] = useState(false);
   const [select, setSelect] = useState(Global.currSelectIndex);
+
+  history.listen((listener) => {
+    const pathname = listener.pathname;
+    if (pathname.indexOf(router.publish.root) !== -1) {
+      setSelect('2');
+    } else if (pathname.indexOf(router.infoImport) !== -1) {
+      setSelect('3');
+    } else {
+      setSelect("1");
+    }
+  })
 
   return (
     <Sider
@@ -33,7 +45,7 @@ const SiderLayout = ({ defaultSelect }: { defaultSelect: string[] }) => {
       collapsed={collapsed}
       onCollapse={() => { setCollapsed(!collapsed) }}>
       <div className="logo" >
-        <h1>高校作业管理系统</h1>
+        <h1 style={{ color: "whitesmoke" }}>高校作业管理系统</h1>
       </div>
       <Menu theme="dark"
         onClick={({ key }) => {
@@ -41,7 +53,7 @@ const SiderLayout = ({ defaultSelect }: { defaultSelect: string[] }) => {
           Global.currSelectIndex = key.toString();
           setSelect(key.toString());
         }}
-        defaultSelectedKeys={defaultSelect}
+        defaultSelectedKeys={["1"]}
         mode="inline"
         selectedKeys={[select]}>
         <Menu.Item key="1" icon={<PieChartOutlined />} >
@@ -105,14 +117,6 @@ const Home: FC = () => {
     message.warning("登陆信息失效，请重新登陆！");
   });
 
-  // 判断当前默认选择的menu
-  let defaultSelect = ['1']
-  const pathname = history.location.pathname;
-  if (pathname.indexOf(router.publish.root) !== -1) {
-    defaultSelect = ['2']
-  } else if (pathname.indexOf(router.infoImport) !== -1) {
-    defaultSelect = ['3']
-  }
 
   return (
     <Switch>
@@ -120,7 +124,7 @@ const Home: FC = () => {
         <LoginPage />
       </Route>
       <Layout style={{ minHeight: '100vh' }}>
-        <SiderLayout defaultSelect={defaultSelect} />
+        <SiderLayout />
         <MainContent />
       </Layout>
     </Switch>

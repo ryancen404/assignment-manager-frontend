@@ -26,9 +26,10 @@ export type AssignmentStatus = '未开始' | '进行中' | '已结束';
  * 作业附件对象，md5用作校验
  */
 export interface AssignmentFile {
+  fileId: string,
   name: string,
-  link: string,
-  md5: string,
+  link?: string,
+  md5?: string,
   length: number
 }
 
@@ -51,7 +52,7 @@ export interface BaseClass {
  * @param students 班级学生
  */
 export interface DetailClass extends BaseClass {
-  studentsAssignment: StudentAssignment[]
+  students: StudentAssignment[]
 }
 
 /**
@@ -83,7 +84,7 @@ export interface ClassStudent {
  * @field corrected: 我(学生)作业是否已经被老师批改
  */
 export interface StudentAssignment extends BaseAssignment, ClassStudent {
-  status: boolean,
+  assignmentStatus: boolean,
   corrected: boolean
   score: number,
 }

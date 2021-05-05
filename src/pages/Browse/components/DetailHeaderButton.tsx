@@ -1,9 +1,11 @@
 import { Button, Popconfirm, Tooltip } from "antd";
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useHistory } from "react-router-dom";
 import { router } from "../../../router";
-import assignmentService from "../../../services/teacher/assignment";
 import { Assignment } from "../../../types";
+import { BrowseContext } from "../index.browse";
+import { onDeleteAssignment } from "../reducer.browse";
+import { BrowseContextType } from "../types.browse";
 
 /**
  * 对删除做二次确认处理
@@ -11,25 +13,23 @@ import { Assignment } from "../../../types";
  * @returns 组件
  */
 export const DeleteButton = ({ assignId }: { assignId: string }) => {
+    const context = useContext<BrowseContextType>(BrowseContext);
+    const history = useHistory();
     // 提示是否可见
     const [visible, setVisible] = React.useState(false);
-    const [confirmLoading, setConfirmLoading] = React.useState(false);
+
+    // 删除成功后将提示设置为不可见
+    if (context.state!.browseAssignment.find(a => a.assignId === assignId) === undefined) {
+        history.push(router.home);
+        return null;
+    }
 
     const showPopconfirm = () => {
         setVisible(true);
     };
 
     const handleOk = () => {
-        setConfirmLoading(true);
-        // setTimeout(() => {
-        //   setVisible(false);
-        //   setConfirmLoading(false);
-        // }, 2000);
-        // requestWraaper(async () => {
-        //     const isSuucess = await assignmentService.deleteAssignment(assignId);
-        // })
-        setVisible(false);
-        setConfirmLoading(false);
+        context.dispatch!(onDeleteAssignment(assignId));
     };
 
     const handleCancel = () => {
@@ -44,7 +44,7 @@ export const DeleteButton = ({ assignId }: { assignId: string }) => {
             onConfirm={handleOk}
             cancelText={"取消"}
             okText={"确认"}
-            okButtonProps={{ loading: confirmLoading }}
+            okButtonProps={{ loading: context.state?.deleteLoading }}
             onCancel={handleCancel}
         >
             <Button onClick={showPopconfirm}>
