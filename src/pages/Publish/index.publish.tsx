@@ -45,8 +45,8 @@ const PublishPage = (props: PublishProps) => {
   console.log("modify assignment:", modifyAssignment)
 
   if (state.isPublishSucess === true) {
-    history.push(router.home);
     Global.currSelectIndex = "1";
+    history.push(router.home);
     return null;
   }
 

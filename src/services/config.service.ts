@@ -2,7 +2,7 @@ import { message } from 'antd';
 import axios from 'axios';
 
 const instance = axios.create({
-  timeout: 10 * 1000,
+  timeout: 30 * 1000,
 });
 
 
@@ -21,7 +21,8 @@ const init = () => {
   }, error => {
     logger("response error:", error);
     // 约定>500是服务内部错误
-    if (error.response.code >= StatusCode.serverError) {
+    const response = error.response;
+    if (response && "code" in response && response.code >= StatusCode.serverError) {
       message.error("服务端错误，请重试！");
     }
     return Promise.reject(error);

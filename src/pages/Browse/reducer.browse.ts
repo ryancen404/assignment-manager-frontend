@@ -7,6 +7,7 @@ import { BrowseAction, BrowseState } from "./types.browse";
 export const initState: BrowseState = {
   browseAssignment: [],
   loading: false,
+  deleteLoading: false
 }
 
 export const reducer = (state: BrowseState, action: BrowseAction): BrowseState => {
@@ -17,6 +18,13 @@ export const reducer = (state: BrowseState, action: BrowseAction): BrowseState =
     }
     case "setLoading": {
       return { ...state, loading: action.isLoading };
+    }
+    case "deleteLoading": {
+      return { ...state, deleteLoading: action.isLoading };
+    }
+    case "deleteSuccess": {
+      const newAssignments = state.browseAssignment.filter(a => a.assignId !== action.assignId);
+      return { ...state, browseAssignment: newAssignments };
     }
     default:
       return { ...state }
@@ -41,6 +49,29 @@ export const initialAssignment = () => {
       }
     })
   }
+}
+
+export const onDeleteAssignment = (assignId: string) => {
+  return async (dispatch: React.Dispatch<BrowseAction>) => {
+    dispatch({ type: "deleteLoading", isLoading: true })
+    try {
+      const response = await assignmentService.deleteAssignment(assignId);
+      if (response.code === 1) {
+        message.info("删除成功！");
+        dispatch({ type: "deleteSuccess", assignId })
+      } else {
+        deleteFail();
+      }
+    } catch (error) {
+      console.log("onDeleteAssignment id: ", assignId, "error:", error);
+      deleteFail();
+    }
+    dispatch({ type: "deleteLoading", isLoading: false })
+  }
+}
+
+function deleteFail() {
+  message.error("删除失败！")
 }
 
 const initialFail = () => {

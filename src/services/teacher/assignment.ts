@@ -57,8 +57,9 @@ const signAssignmentComplete = (assignId: string) => {
  * @param assignId 作业id
  * @returns 是否成功
  */
-const deleteAssignment = (assignId: string) => {
-  return true
+const deleteAssignment = async (assignId: string) => {
+  const response = await Axios.instance.delete<BaseResponse>(`${baseUrl}/${assignId}`);
+  return response.data;
 }
 
 const assignmentService = {

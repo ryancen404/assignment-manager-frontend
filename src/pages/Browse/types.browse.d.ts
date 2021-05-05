@@ -10,9 +10,16 @@ export type BrowseAction = ActionWithLoading |
 {
   type: "initial",
   data: Assignment[]
+} | {
+  type: "deleteLoading",
+  isLoading: boolean
+} | {
+  type: "deleteSuccess",
+  assignId: string
 }
 
 export interface BrowseState {
   browseAssignment: Assignment[],
-  loading: boolean
+  loading: boolean,
+  deleteLoading: boolean
 }

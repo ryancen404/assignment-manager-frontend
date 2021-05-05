@@ -85,9 +85,9 @@ const InfoContent = () => {
   return (
     <div>
       <StatusWrapper
-        // todo: set request state
         isLoading={false}
         isShowError={false}
+        emptyDes="还没导入学生，快去导入吧～"
         isShowEmpty={students === undefined || students.length === 0}
         content={
           <Table columns={getColumns(onDelete)} dataSource={showStudents} />

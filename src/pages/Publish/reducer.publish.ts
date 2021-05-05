@@ -57,19 +57,19 @@ export const initPublish = () => {
  */
 export const onPublish = (params: NewAssignmentParams) => {
   return async (dispatch: React.Dispatch<PublishAction>) => {
+    dispatch({ type: "setLoading", loading: true })
     try {
-      dispatch({ type: "setLoading", loading: true })
       const response = await assignmentService.createAssignment(params);
       if (response.code === 1) {
         dispatch({ type: "publishSuccess" })
       } else {
         onPublishFail();
       }
-      dispatch({ type: "setLoading", loading: false })
     } catch (error) {
       console.log("onPublish error:", error);
       onPublishFail();
     }
+    dispatch({ type: "setLoading", loading: false })
   }
 }
 

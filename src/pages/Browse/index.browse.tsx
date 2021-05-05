@@ -1,4 +1,4 @@
-import { Space, Table, Tag } from 'antd';
+import { Button, Popconfirm, Space, Table, Tag } from 'antd';
 import React, { CSSProperties, Reducer, useEffect, useReducer, useState } from 'react';
 import { Route, Switch, useRouteMatch, Link } from "react-router-dom";
 import BrowseDetailPage from "./Detail";
@@ -7,7 +7,7 @@ import { AssignmentStatus, Assignment, DetailClass, BaseClass } from "../../type
 import assignmentService from "../../services/teacher/assignment";
 import { ColumnsType } from 'antd/lib/table/Table';
 import { BrowseAction, BrowseContextType, BrowseState } from './types.browse';
-import { initialAssignment, initState, reducer } from './reducer.browse';
+import { initialAssignment, initState, onDeleteAssignment, reducer } from './reducer.browse';
 import { supportAsyncDispatch } from '../../other/reducer.config';
 import StatusWrapper from '../../components/StatusWrapper';
 
@@ -94,12 +94,26 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
         return (
           <Space size="small">
             <a>批改</a>
-            <a>删除</a>
+            <Popconfirm
+              title="确认删除该作业吗？"
+              okText="确认"
+              okButtonProps={{
+                loading: state.deleteLoading,
+                onClick: () => onDelete(record.assignId)
+              }}
+              cancelText="取消"
+            >
+              <Button type="link">删除</Button>
+            </Popconfirm>
           </Space>
         )
       },
     },
   ];
+
+  const onDelete = (id: string) => {
+    dispatch(onDeleteAssignment(id));
+  }
 
   console.log("state.browseAssignment = ", state.browseAssignment);
 
@@ -133,7 +147,7 @@ const handleTime = (assignments: Assignment[]) => {
     return {
       ...a,
       timeFromTo: `${a.startTime} - ${a.endTime}`,
-      completion: `${a.complete}/${a.total}`
+      completion: `${a.complete} / ${a.total}`
     }
   })
 }
