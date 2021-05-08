@@ -60,12 +60,33 @@ const deleteAssignment = async (assignId: string) => {
   return response.data;
 }
 
+export interface ScoringParams {
+  assignId: string,
+  sId: string,
+  score: number
+}
+/**
+ * 打分请求
+ */
+const scoring = async (params: ScoringParams) => {
+  const response = await Axios.instance.put<BaseResponse>(`${baseUrl}/score`, params);
+  return response.data;
+}
+
+// 将作业标记为已经完成，即所有学生作业状态变为已批改, 作业整体状态已经结束
+const completeAssignment = async (assignId: string) => {
+  const response = await Axios.instance.post<BaseResponse>(`${baseUrl}/complete`, { assignId });
+  return response.data;
+}
+
 const assignmentService = {
   getEasyAll,
   getAssignmentClass,
   createAssignment,
   signAssignmentComplete,
-  deleteAssignment
+  deleteAssignment,
+  scoring,
+  completeAssignment
 }
 
 export default assignmentService

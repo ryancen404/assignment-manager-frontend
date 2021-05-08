@@ -20,11 +20,36 @@ export type BrowseAction = ActionWithLoading |
   type: "appendDeatilMap",
   key: string,
   value: DetailClass[]
+} | {
+  type: "setScoringLoading",
+  isLoading: boolean
+} | {
+  type: "scoringResponse",
+  isSuucess: boolean,
+  assignId: string,
+  sId: string,
+  score: number
+} | {
+  type: "setTabIndex",
+  index: number
+} | {
+  type: "setCompleteLoading",
+  isLoading: boolean
+} | {
+  type: "setGoBack",
+  isGoBack: boolean
+} | {
+  type: "completeSucess",
+  assignId: string
 }
 
 export interface BrowseState {
   browseAssignment: Assignment[],
   loading: boolean,
   deleteLoading: boolean,
-  detailClassesMap: Map<string, DetailClass[]>
+  detailClassesMap: Map<string, DetailClass[]>,
+  scoringLoading: boolean,
+  detailTabIndex: number,
+  completeLoading: boolean,
+  goBack: boolean
 }

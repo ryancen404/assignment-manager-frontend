@@ -3,6 +3,8 @@ import React, { CSSProperties, Key, useState } from 'react';
 import { DetailClass, StudentAssignment } from '../../../types';
 import ContentWrapper from '../../../components/ContentWrapper';
 import { TableRowSelection } from 'antd/lib/table/interface';
+import ScoringButton from './ScoringButton';
+import PreviewButton from './PreviewButton';
 
 export interface DetailContentProps {
     style: CSSProperties,
@@ -67,26 +69,13 @@ const columns = [
         render: (text: string, record: StudentAssignmentWithKey) => {
             return (
                 <Space size="small">
-                    <Button type="link" size="small" onClick={() => onPreview(record)}>预览作业</Button>
-                    <Button type="link" size="small" onClick={() =>onClickScoring(record)}>打分</Button>
+                    <PreviewButton assignment={record} />
+                    <ScoringButton text="打分" assignment={record}></ScoringButton>
                 </Space>
             )
         },
     }
 ];
-
-const onPreview = (record: StudentAssignmentWithKey) => {
-    if (!record.assignmentStatus) {
-        message.info(`${record.studentName}还没完成作业暂时无法预览`);
-    }
-    // todo download assignment
-}
-
-const onClickScoring = (record: StudentAssignmentWithKey) => {
-    if (!record.assignmentStatus) {
-        message.info(`${record.studentName}还没完成作业暂时无法打分`);
-    }
-}
 
 const getRowSelection = (
     dataSource: StudentAssignmentWithKey[] | undefined,

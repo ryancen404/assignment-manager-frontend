@@ -7,7 +7,6 @@ import DetailContent from './components/DetailContent';
 import ContentWrapper from '../../components/ContentWrapper'
 import { router, pageName } from '../../router';
 import { Assignment } from '../../types';
-import assignmentService from "../../services/teacher/assignment";
 import { CompleteButton, DeleteButton, ModifyButton } from './components/DetailHeaderButton';
 import { BrowseContextType } from './types.browse';
 import { BrowseContext, ShowAssignment } from './index.browse';
@@ -32,17 +31,17 @@ const BrowseDetailPage = (props: BrowseDetailPageProps) => {
   const location = useLocation<LoactionParams>();
   const match = useRouteMatch<MatchParams>(`${router.browse.root}${router.browse.detail}`);
 
-  // 当前选择的tab
-  const [tabIndex, setTabIndex] = useState("0");
-
   console.log("BrowseDetailPage", match?.params.assignId);
 
   const assignId = match?.params.assignId;
   const assignment = location.state.assignment;
 
   useEffect(() => {
-    if (assignId && context.state?.detailClassesMap.get(assignId) === undefined)
+    if (assignId && context.state?.detailClassesMap.get(assignId) === undefined) {
       context.dispatch!(getAssignmentClasses(assignId));
+    }
+    // 每次新创建需要把index设置为0
+    context.dispatch!({ type: "setTabIndex", index: 0 })
   }, [assignId])
 
   console.log("BrowseDetailPage data:", assignment);
@@ -50,11 +49,11 @@ const BrowseDetailPage = (props: BrowseDetailPageProps) => {
 
   const onTabsChange = (index: string) => {
     console.log("BrowseDetailPage curren tab:", index);
-    setTabIndex(index);
+    context.dispatch!({ type: "setTabIndex", index: Number(index) });
   }
 
   const detailClasses = context.state!.detailClassesMap.get(assignId!);
-  const showClass = detailClasses?.find((_, index) => index === Number(tabIndex));
+  const showClass = detailClasses?.find((_, index) => index === context.state!.detailTabIndex);
   return (
     <ContentWrapper
       isError={assignment === undefined}
@@ -68,10 +67,10 @@ const BrowseDetailPage = (props: BrowseDetailPageProps) => {
           // 右上角的按钮
           <DeleteButton assignId={assignId!} />,
           <ModifyButton assignment={assignment!} />,
-          <CompleteButton assignId={assignId!} />,
+          <CompleteButton assignment={assignment!} />,
         ]}
         footer={
-          <Tabs defaultActiveKey="0" onChange={onTabsChange}>
+          <Tabs defaultActiveKey={context.state!.detailTabIndex.toString()} onChange={onTabsChange}>
             {assignment.classs.map((value, index) => {
               return <TabPane tab={value.className} key={index} />
             })}
