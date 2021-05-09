@@ -50,7 +50,8 @@ const setToken = (content: LoginResponse) => {
 
 const clearUser = () => {
   localStorage.clear();
-  globalToken = null
+  globalToken = null;
+  Axios.clear();
 }
 
 const getGlobalToken = () => globalToken;

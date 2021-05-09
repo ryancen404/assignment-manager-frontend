@@ -94,10 +94,10 @@ export const onSignup = (signupParams: SignupParams) => {
           index: "login"
         })
       } else {
-        message.error("注册失败，请重试！")
+        message.error("账号已经存在！")
       }
     } catch (error) {
-      message.error("注册失败，请重试！")
+      message.error("账号已经存在！")
     }
     dispatch({
       type: "setLoading",

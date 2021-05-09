@@ -85,7 +85,7 @@ const MainContent = ({ path }: { path: string }) => {
     <Layout
       className="site-layout">
       <FixHeader
-        userName={myself.username}
+        userName={myself.username + "老师"}
       />
       <Content style={{ margin: '16px 16px' }}>
         {/* 发布页 */}

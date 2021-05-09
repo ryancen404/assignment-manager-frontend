@@ -53,6 +53,10 @@ const setTokenErrorCallback = (callback: () => void) => {
   })
 }
 
+const clear = () => {
+  instance.defaults.headers.common['Authorization'] = "";
+}
+
 // 服务端约定的HTTP错误
 export const StatusCode = {
   parmasError: 400,
@@ -73,6 +77,7 @@ const Axios = {
   setTokenErrorCallback,
   StatusCode,
   StateCode,
+  clear
 }
 
 export default Axios;
