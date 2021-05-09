@@ -201,6 +201,17 @@ export const onCompleteAssignment = (assignId: string) => {
   }
 }
 
+export const onDownloadStuFile = (fId: string, fName: string) => {
+  return async (dispatch: React.Dispatch<BrowseAction>) => {
+    try {
+      const response = await assignmentService.downloadStuFile(fId);
+      fileDownload(response, fName);
+    } catch (error) {
+      message.error("网络错误！")
+    }
+  }
+}
+
 function deleteFail() {
   message.error("删除失败！")
 }

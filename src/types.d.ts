@@ -87,6 +87,7 @@ export interface StudentAssignment extends BaseAssignment, ClassStudent {
   assignmentStatus: boolean,
   corrected: boolean
   score: number,
+  myFile?: AssignmentFile
 }
 
 
@@ -108,4 +109,20 @@ export interface StudentUser {
   username: string,
   avator: string,
   studentNumber: string,
+}
+
+
+export interface StudentBrowseAssignment extends BaseAssignment {
+  // 我是否已经完成状态
+  assignmentStatus: boolean,
+  corrected: boolean
+  score: number,
+  tId: string,
+  teacherName: string
+  files?: AssignmentFile[],
+  startTime: string,
+  endTime: string,
+  // 当前作业状态，以时间区间作为状态依据
+  status: AssignmentStatus,
+  myFiles?: AssignmentFile[]
 }

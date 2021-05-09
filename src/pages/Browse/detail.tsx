@@ -6,7 +6,6 @@ import HeaderContent from './components/HeaderContent';
 import DetailContent from './components/DetailContent';
 import ContentWrapper from '../../components/ContentWrapper'
 import { router, pageName } from '../../router';
-import { Assignment } from '../../types';
 import { CompleteButton, DeleteButton, ModifyButton } from './components/DetailHeaderButton';
 import { BrowseContextType } from './types.browse';
 import { BrowseContext, ShowAssignment } from './index.browse';
@@ -29,7 +28,7 @@ const BrowseDetailPage = (props: BrowseDetailPageProps) => {
   const context = useContext<BrowseContextType>(BrowseContext);
   // 通过路由传过来的参数
   const location = useLocation<LoactionParams>();
-  const match = useRouteMatch<MatchParams>(`${router.browse.root}${router.browse.detail}`);
+  const match = useRouteMatch<MatchParams>(`${router.teacher}${router.browse.root}${router.browse.detail}`);
 
   console.log("BrowseDetailPage", match?.params.assignId);
 

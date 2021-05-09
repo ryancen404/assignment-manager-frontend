@@ -1,6 +1,7 @@
 export const router = {
   // 默认主页是作业浏览
   home: "/",
+  teacher: "/teacher",
   browse: {
     root: "/browse",
     detail: "/:assignId"
@@ -19,6 +20,15 @@ export const router = {
   profile: "/profile",
   // 登陆
   login: "/login",
+}
+
+export const stu_router = {
+  stu: "/stu",
+  info: "/info",
+  browse: {
+    root: "/browse",
+    detail: "/:assignId"
+  }
 }
 
 export const pageName = {

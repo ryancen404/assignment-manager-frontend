@@ -1,8 +1,9 @@
 import { message, Spin } from "antd";
-import React, { Reducer, useReducer } from "react";
+import React, { Reducer, useEffect, useReducer } from "react";
 import { useHistory } from "react-router";
+import Global from "../../Global";
 import { supportAsyncDispatch } from "../../other/reducer.config";
-import { router } from "../../router";
+import { router, stu_router } from "../../router";
 import LoginForm from "./components/LoginForm";
 import SignupForm from "./components/SignupForm";
 import "./index.css"
@@ -18,6 +19,10 @@ const LoginPage: React.FC = () => {
 
   // 支持异步函数
   const dispatch = supportAsyncDispatch<LoginAction>(defDispatch);
+
+  useEffect(() => {
+    Global.clearUser()
+  }, [])
 
   // 监听是否登陆成功
   if (state.isLogin) {
@@ -44,12 +49,16 @@ const LoginPage: React.FC = () => {
 
 const Title = () => {
   return <div className="TextContainer">
-    <p style={{ fontSize: "36px", letterSpacing: "10px", margin: "auto" }}>
+    <p style={{
+      fontSize: "36px", letterSpacing: "10px", margin: "auto",
+      position: "absolute", left: "32%"
+    }}>
       高等数学平时作业管理系统
+      <p style={{ fontSize: "22px", letterSpacing: "0px" }}>
+        Advanced Mathematics assignment management system
+      </p>
     </p>
-    <p style={{ fontSize: "22px", margin: "auto" }}>
-      Advanced Mathematics assignment management system
-    </p>
+
   </div>;
 }
 

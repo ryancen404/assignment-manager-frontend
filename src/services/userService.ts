@@ -45,7 +45,7 @@ const login = async (loginParms: LoginParams): Promise<BaseResponse<LoginRespons
 const signup = async (signupParams: SignupParams): Promise<BaseResponse> => {
   let response;
   if (signupParams.type === 0) {
-    response = await Axios.instance.post<BaseResponse>(teacherUrl, signupParams);
+    response = await Axios.instance.post<BaseResponse>(`${teacherUrl}/signup`, signupParams);
     console.log("signup res:", response);
   } else {
     response = await Axios.instance.post<BaseResponse>(studentUrl, signupParams);

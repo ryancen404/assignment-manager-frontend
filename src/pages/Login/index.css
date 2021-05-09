@@ -9,7 +9,7 @@
 
 .TextContainer {
   position: relative;
-  width: auto;
+  width: 100%;
   margin: 0 auto;
   top: 3%;
   color:whitesmoke;
@@ -19,8 +19,9 @@
   position: relative;
   background-color: whitesmoke;
   margin: 0 auto;
+  left: 33%;
   width: 34%;
-  top: 20%;
+  top: 30%;
   bottom: 30%;
   display:inline-block !important;
   text-align: center;

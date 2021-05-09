@@ -9,7 +9,9 @@ export type InfoContextType = {
 export interface InfoState {
   tabKey: string
   class: ClassBrowse[],
-  isLoading: boolean
+  isLoading: boolean,
+  deleteAllLoading: boolean,
+  deleteAllSuccess: boolean
   // student: []
 }
 
@@ -28,4 +30,12 @@ export type InfoAction = {
 } | {
   type: "setLoading",
   isLoading: boolean
+} | {
+  type: "setDeleteLoading",
+  isLoading: boolean
+} | {
+  type: "deleteClassesSuccess",
+  classId: string
+} | {
+  type: "resetDeleteAll"
 }

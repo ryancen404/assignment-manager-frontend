@@ -94,9 +94,9 @@ const PublishPage = (props: PublishProps) => {
           <TimeItem defaultAssignment={modifyAssignment} />
           <FileItem />
           <Form.Item>
-            <Button type="primary" htmlType="submit" loading={state.isLoading}>
+            <Button style={{marginLeft: "40%"}} type="primary" htmlType="submit" loading={state.isLoading}>
               立即发布
-          </Button>
+            </Button>
           </Form.Item>
         </Form>
       </div>

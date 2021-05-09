@@ -5,25 +5,28 @@ import Global from "../../../Global";
 import { UploadChangeParam } from "antd/lib/upload";
 import { InfoContextType } from "../type";
 import { InfoContext } from "..";
-import { initialClassData } from "../reducer";
+import { initialClassData, onDeleteAll } from "../reducer";
 
 export const ClearAll = () => {
+  const context = useContext<InfoContextType>(InfoContext);
   // 提示是否可见
   const [visible, setVisible] = useState(false);
-  const [confirmLoading, setConfirmLoading] = React.useState(false);
 
   const showPopconfirm = () => {
     setVisible(true);
   };
 
+  if (context.state?.deleteAllSuccess) {
+    setTimeout(() => {
+      setVisible(false);
+      context.dispatch!({ type: "resetDeleteAll" })
+    }, 1000)
+  }
+
   const handleOk = () => {
-    setConfirmLoading(true);
-    // setTimeout(() => {
-    //   setVisible(false);
-    //   setConfirmLoading(false);
-    // }, 2000);
-    setVisible(false);
-    setConfirmLoading(false);
+    const index = context.state!.tabKey;
+    const classId = context.state!.class[Number(index)].classId
+    context.dispatch!(onDeleteAll(classId))
   };
 
   const handleCancel = () => {
@@ -38,7 +41,7 @@ export const ClearAll = () => {
       onConfirm={handleOk}
       cancelText={"取消"}
       okText={"确认"}
-      okButtonProps={{ loading: confirmLoading }}
+      okButtonProps={{ loading: context.state!.deleteAllLoading }}
       onCancel={handleCancel}
     >
       <Button onClick={showPopconfirm}>
@@ -55,6 +58,7 @@ const onUploadChange = (info: UploadChangeParam) => {
 
 export const BatchImport = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [okLoading, setOkLing] = useState(false)
   const context = useContext<InfoContextType>(InfoContext);
   const templateDownloadUrl = "http://127.0.0.1:3001/api/files/studentTemplate";
 
@@ -63,9 +67,11 @@ export const BatchImport = () => {
   };
 
   const handleOk = () => {
-    setIsModalVisible(false);
+    setOkLing(true);
     // 点击OK后重新拉一次班级学生信息
     context.dispatch!(initialClassData());
+    setOkLing(false);
+    setIsModalVisible(false);
   };
 
   const handleCancel = () => {
@@ -89,7 +95,7 @@ export const BatchImport = () => {
       <Button type="primary" onClick={showModal}>
         批量导入
     </Button>
-      <Modal title="批量导入" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+      <Modal title="批量导入" visible={isModalVisible} onOk={handleOk} okButtonProps={{ loading: okLoading }} onCancel={handleCancel}>
         <Space direction="vertical">
           <div>
             <Button type="link" size="small" href={templateDownloadUrl}>

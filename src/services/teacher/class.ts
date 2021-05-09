@@ -44,11 +44,20 @@ const deleteStudent = async (params: DeleteClassStudentParams): Promise<BaseResp
     return response.data
 }
 
+/**
+ * 删除整个班级
+ */
+const deleteAll = async (classId: string) => {
+    const response = await Axios.instance.delete<BaseResponse>(`${classUrl}/${classId}`);
+    return response.data;
+}
+
 const classService = {
     getClassById,
     getAllClass,
     deleteStudent,
-    getBaseClasses
+    getBaseClasses,
+    deleteAll
 }
 
 export default classService;

@@ -8,7 +8,8 @@ import { LoginAction, LoginState } from "./type";
 export const initState: LoginState = {
   index: "login",
   isLogin: false,
-  isLoading: false
+  isLoading: false,
+  userType: 0
 }
 
 /**
@@ -23,7 +24,7 @@ export const reducer = (state: LoginState, action: LoginAction): LoginState => {
     case "changeIndex":
       return { ...state, index: action.index };
     case "loginSuccess":
-      return { ...state, isLogin: true };
+      return { ...state, isLogin: true, isLoading: action.isLoading, userType: action.userType };
     case "setLoading": {
       return { ...state, isLoading: action.isLoading }
     }
@@ -52,18 +53,28 @@ export const onLogin = (account: string, password: string, type: 0 | 1, remember
           Global.setToken(content);
           dispatch({
             type: "loginSuccess",
+            isLoading: false,
+            userType: type
           })
           return
         }
       }
       message.error("账号或密码错误请重试");
+      dispatch({
+        type: "setLoading",
+        isLoading: false
+      })
     } catch (error) {
-      message.error("账号或密码错误请重试");
+      if (type === 0) {
+        message.error("账号或密码错误请重试");
+      } else {
+        message.error("请联系老师导入学生信息")
+      }
+      dispatch({
+        type: "setLoading",
+        isLoading: false
+      })
     }
-    dispatch({
-      type: "setLoading",
-      isLoading: false
-    })
   }
 }
 

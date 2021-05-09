@@ -6,6 +6,7 @@ const APP_NAME = "assignment-manager"
 const TOKEN_KEY = APP_NAME + "_token";
 const USERNAME_KEY = APP_NAME + "_myusername"
 const UID_KEY = APP_NAME + "_s_uid";
+const USER_TYPE_KEY = APP_NAME + "_user_type";
 
 // 全局Token
 let globalToken: string | null = null
@@ -20,6 +21,11 @@ const initApp = () => {
   let localToken = localStorage.getItem(TOKEN_KEY);
   if (localToken !== null) {
     globalToken = localToken;
+    myself = {
+      type: Number(localStorage.getItem(USER_TYPE_KEY)),
+      username: localStorage.getItem(USERNAME_KEY)!,
+      uid: localStorage.getItem(UID_KEY)!
+    }
     Axios.setRequestToken(globalToken);
   }
 }
@@ -29,6 +35,7 @@ const storageToken = (content: LoginResponse) => {
   localStorage.setItem(TOKEN_KEY, globalToken);
   localStorage.setItem(USERNAME_KEY, content.username);
   localStorage.setItem(UID_KEY, content.uid);
+  localStorage.setItem(USER_TYPE_KEY, content.type.toString())
   Axios.setRequestToken(content.token);
 }
 
@@ -48,7 +55,7 @@ const clearUser = () => {
 
 const getGlobalToken = () => globalToken;
 
-const isLogin = () => globalToken !== null
+const isLogin = () => globalToken !== null && myself !== null
 
 let myself: User | null = null
 
@@ -58,7 +65,7 @@ const getMyself = () => {
 
 export interface User {
   username: string,
-  type: 0 | 1,
+  type: number,
   uid: string
 }
 

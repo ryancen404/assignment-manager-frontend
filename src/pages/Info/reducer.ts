@@ -9,7 +9,9 @@ import { InfoAction, InfoState } from "./type";
 export const initState: InfoState = {
   tabKey: "0",
   isLoading: false,
-  class: []
+  class: [],
+  deleteAllLoading: false,
+  deleteAllSuccess: false
 }
 
 export const reducer = (state: InfoState, action: InfoAction): InfoState => {
@@ -32,6 +34,16 @@ export const reducer = (state: InfoState, action: InfoAction): InfoState => {
       return { ...state, class: newStateClass }
     case "setLoading": {
       return { ...state, isLoading: action.isLoading }
+    }
+    case "setDeleteLoading": {
+      return { ...state, deleteAllLoading: action.isLoading }
+    }
+    case "deleteClassesSuccess": {
+      const newClasses = state.class.filter(clazz => clazz.classId !== action.classId);
+      return { ...state, class: newClasses, deleteAllSuccess: true };
+    }
+    case "resetDeleteAll": {
+      return { ...state, deleteAllSuccess: false }
     }
     default:
       return state;
@@ -88,5 +100,23 @@ export const onDeleteStudent = (classId: string, sId: string) => {
       message.error("删除失败！")
       return
     }
+  }
+}
+
+export const onDeleteAll = (classId: string) => {
+  return async (dispatch: React.Dispatch<InfoAction>) => {
+    dispatch({ type: "setDeleteLoading", isLoading: true })
+    try {
+      const response = await classService.deleteAll(classId);
+      if (response.code === 1) {
+        dispatch({ type: "deleteClassesSuccess", classId })
+        message.info("删除成功")
+        return
+      }
+      message.error("删除失败，请稍后！")
+    } catch (error) {
+      message.error("删除失败，请稍后！")
+    }
+    dispatch({ type: "setDeleteLoading", isLoading: false })
   }
 }

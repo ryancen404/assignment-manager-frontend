@@ -33,6 +33,7 @@ const headerStyle: CSSProperties = {
   background: "#ffffff",
   padding: 0,
   display: 'flex',
+  position: 'relative',
   flexDirection: 'row',
   //内容居中和靠右
   alignItems: "center",
@@ -49,12 +50,13 @@ const FixHeader = (props: HeaderProps) => {
   return (
     <Header
       style={headerStyle}>
+      <div style={{ position: 'absolute', left: '50px', fontSize: '3.5ex' }}>高等数学平时作业管理系统</div>
       <div
         onClick={props.onAvatorClick}
         style={avatorStyle}>
         <Avatar
           alt={"avator"}
-          size={"small"}
+          size={"default"}
           shape={"circle"}
           src={"https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png"}
           icon={<UserOutlined />}

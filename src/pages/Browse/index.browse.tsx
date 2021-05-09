@@ -25,7 +25,7 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
 
   const dispatch = supportAsyncDispatch<BrowseAction>(defDispatch);
 
-  const match = useRouteMatch(router.browse.root)
+  const match = useRouteMatch()
   log("match: ", match?.path);
 
   // 首次执行请求作业列表数组
@@ -47,16 +47,15 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
       <div style={props.style}>
         <Switch>
           {/* 点击后的作业详情页 :assignId作业Id */}
-          <Route path={`${match?.path}${router.browse.detail}`}>
+          <Route exact path={`${match.path}${router.browse.detail}`}>
             <BrowseDetailPage />
           </Route>
-          <Route path={match?.path}>
+          <Route path={match.path}>
             <StatusWrapper
               isLoading={state.loading}
               isShowEmpty={state.browseAssignment.length === 0}
               emptyDes="还没有作业，快去发布吧～"
-              content={<Table columns={columns} dataSource={showAssignment} />}
-            />
+              content={<Table columns={columns} dataSource={showAssignment} />} />
           </Route>
         </Switch>
       </div>
@@ -86,7 +85,7 @@ function getColumns(match: any, state: BrowseState, onDelete: (id: string) => vo
       key: "name",
       render: (text: string, record: ShowAssignment) => {
         const routerParams = {
-          pathname: `${match?.path}/${record.assignId}`,
+          pathname: `${match.path}/${record.assignId}`,
           state: {
             assignment: record
           }

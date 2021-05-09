@@ -39,7 +39,7 @@ const LoginForm = () => {
         <Form.Item
           name="account"
           rules={[{ required: true, message: '请输入你的邮箱!' }]}>
-          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="邮箱" />
+          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="邮箱/学号" />
         </Form.Item>
         <Form.Item
           name="password"

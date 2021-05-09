@@ -1,4 +1,4 @@
-import { Assignment, DetailClass } from "../../types";
+import { Assignment, DetailClass, StudentAssignment, StudentBrowseAssignment } from "../../types";
 import Axios from "../config.service";
 import { BaseResponse } from "../type";
 
@@ -12,6 +12,14 @@ const baseUrl = "/api/assignment"
 const getEasyAll = async () => {
   const response = await Axios.instance.get<BaseResponse<Assignment[]>>(baseUrl);
   return response.data
+}
+
+/**
+ * 学生获取自己的作业信息
+ */
+const getStuEasyAll = async () => {
+  const response = await Axios.instance.get<BaseResponse<StudentBrowseAssignment[]>>(`${baseUrl}`)
+  return response.data;
 }
 
 /**
@@ -79,14 +87,33 @@ const completeAssignment = async (assignId: string) => {
   return response.data;
 }
 
+export interface StuCompleteParams {
+  assignId: string,
+  fileId: string
+}
+const stuCompleteAssignment = async (params: StuCompleteParams) => {
+  const response = await Axios.instance.post<BaseResponse>(`${baseUrl}/complete/stu`, params);
+  return response.data;
+}
+
+const downloadStuFile = async (fId: string) => {
+  const response = await Axios.instance.get(`/api/files/assignment/student/${fId}`, {
+    responseType: 'blob',
+  });
+  return response.data
+}
+
 const assignmentService = {
+  downloadStuFile,
+  stuCompleteAssignment,
   getEasyAll,
   getAssignmentClass,
   createAssignment,
   signAssignmentComplete,
   deleteAssignment,
   scoring,
-  completeAssignment
+  completeAssignment,
+  getStuEasyAll
 }
 
 export default assignmentService

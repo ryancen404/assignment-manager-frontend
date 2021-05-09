@@ -1,20 +1,18 @@
+
 import { Layout, Menu, message } from 'antd';
-import { CSSProperties, FC, useState } from 'react';
-import { Link, Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import React, { CSSProperties, FC, useState } from 'react';
+import { Link, Redirect, Route, useHistory, useRouteMatch } from 'react-router-dom';
 import {
-  VideoCameraOutlined,
-  UploadOutlined,
+  InfoCircleOutlined,
   PieChartOutlined,
 } from '@ant-design/icons';
 
-import "./index.css"
-import { router } from '../../router';
-import FixHeader from './components/FixHeader';
-import AssignmentBrowsePage from "../Browse/index.browse";
-import PublishPage from '../Publish/index.publish';
+import { router, stu_router } from '../../router';
 import InfoManagerPage from '../Info';
 import Global from '../../Global';
 import Axios from '../../services/config.service';
+import FixHeader from '../Home/components/FixHeader';
+import StuBrowse from './Browse/index.stu.browse';
 
 const { Sider, Content, Footer } = Layout;
 
@@ -43,7 +41,7 @@ const SiderLayout = ({ path }: { path: string }) => {
       collapsible
       collapsed={collapsed}
       onCollapse={() => { setCollapsed(!collapsed) }}>
-      <div style={{ marginLeft: "" }} >
+      <div style={{ marginLeft: "50px" }} >
         {/* <h1 style={{ color: "whitesmoke" }}>功能选择</h1> */}
       </div>
       <Menu theme="dark"
@@ -56,13 +54,10 @@ const SiderLayout = ({ path }: { path: string }) => {
         mode="inline"
         selectedKeys={[select]}>
         <Menu.Item key="1" icon={<PieChartOutlined />} >
-          <Link to={`${path}${router.browse.root}`}>作业浏览</Link>
+          <Link to={`${path}${stu_router.browse.root}`}>作业浏览</Link>
         </Menu.Item>
-        <Menu.Item key="2" icon={<UploadOutlined />}>
-          <Link to={`${path}${router.publish.root}`}>作业发布</Link>
-        </Menu.Item>
-        <Menu.Item key="3" icon={<VideoCameraOutlined />}>
-          <Link to={`${path}${router.infoImport}`}>信息管理</Link>
+        <Menu.Item key="2" icon={<InfoCircleOutlined />}>
+          <Link to={`${path}${stu_router.info}`}>我的信息</Link>
         </Menu.Item>
       </Menu>
     </Sider>
@@ -88,20 +83,16 @@ const MainContent = ({ path }: { path: string }) => {
         userName={myself.username}
       />
       <Content style={{ margin: '16px 16px' }}>
-        {/* 发布页 */}
-        <Route path={[`${path}${router.publish.root}`, `${path}${router.publish.root}${router.publish.fix}`]}>
-          <PublishPage style={contentStyle} />
-        </Route>
-        {/* 信息管理页 */}
-        <Route path={`${path}${router.infoImport}`}>
-          <InfoManagerPage style={contentStyle} />
+        {/* 我的信息 */}
+        <Route path={`${path}${stu_router.info}`}>
+          {/* <InfoManagerPage style={contentStyle} /> */}
         </Route>
         {/* 默认的作业浏览页 */}
-        <Route path={`${path}${router.browse.root}`}>
-          <AssignmentBrowsePage style={contentStyle} />
+        <Route path={`${path}${stu_router.browse.root}`}>
+          <StuBrowse style={contentStyle} />
         </Route>
-        <Route path={`${path}`}>
-          <Redirect to={`${path}${router.browse.root}`} />
+        <Route path={path}>
+          <Redirect to={`${path}${stu_router.browse.root}`} />
         </Route>
       </Content>
       <Footer style={{ textAlign: 'center' }}>重庆邮电大学理学院©2021 Created by 岑金富</Footer>
@@ -110,7 +101,7 @@ const MainContent = ({ path }: { path: string }) => {
 }
 
 
-const Home: FC = () => {
+const StudentHome: FC = () => {
   const history = useHistory()
   const match = useRouteMatch()
 
@@ -133,10 +124,10 @@ const Home: FC = () => {
   );
 }
 
-export default Home;
-
 const contentStyle: CSSProperties = {
   padding: 24,
   minHeight: 700,
   background: "#fff",
 }
+
+export default StudentHome;
