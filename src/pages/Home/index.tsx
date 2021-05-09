@@ -74,12 +74,19 @@ const SiderLayout = () => {
  * 除了侧边栏的主内容
  */
 const MainContent = () => {
+  const history = useHistory();
+  const myself = Global.getMyself();
+  if (myself === null) {
+    history.push(router.login);
+    message.warning("登陆信息失效，请重新登陆！");
+    return null
+  }
   return (
     <Layout
       className="site-layout">
       <FixHeader
-        userName={"岑金富"}
-        onAvatorClick={() => message.info("点击头像路由到个人页")} />
+        userName={myself.username}
+      />
       <Content style={{ margin: '16px 16px' }}>
         {/* 发布页 */}
         <Route path={[router.publish.root, `${router.publish.root}${router.publish.fix}`]}>
@@ -98,7 +105,7 @@ const MainContent = () => {
           {Global.isLogin() ? <Redirect to={router.browse.root} /> : <Redirect to={router.login} />}
         </Route>
       </Content>
-      <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+      <Footer style={{ textAlign: 'center' }}>重庆邮电大学理学院©2021 Created by 岑金富</Footer>
     </Layout>
   )
 }

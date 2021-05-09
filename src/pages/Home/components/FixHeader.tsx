@@ -1,7 +1,10 @@
-import { CSSProperties } from 'react';
-import { Layout, Avatar, } from 'antd';
+import React, { CSSProperties } from 'react';
+import { Layout, Avatar, Button, } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import "./FixHeadr.css"
+import Global from '../../../Global';
+import { useHistory } from 'react-router';
+import { router } from '../../../router';
 const { Header } = Layout
 
 /**
@@ -37,6 +40,11 @@ const headerStyle: CSSProperties = {
 }
 
 const FixHeader = (props: HeaderProps) => {
+  const history = useHistory();
+  const exitLogin = () => {
+    Global.clearUser();
+    history.push(router.login);
+  }
 
   return (
     <Header
@@ -53,7 +61,8 @@ const FixHeader = (props: HeaderProps) => {
           style={{
             marginRight: "6px"
           }} />
-        <div>{props.userName}</div>
+        <div style={{ fontSize: "3ex" }}>{props.userName}</div>
+        <Button type={"text"} size="small" style={{ color: "red" }} onClick={exitLogin}>退出登陆</Button>
       </div>
     </Header>
   )

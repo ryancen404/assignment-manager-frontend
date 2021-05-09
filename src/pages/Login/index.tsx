@@ -21,8 +21,8 @@ const LoginPage: React.FC = () => {
 
   // 监听是否登陆成功
   if (state.isLogin) {
-    history.push(router.home);
     message.info("登陆成功!")
+    history.push(router.home);
     return null
   }
 

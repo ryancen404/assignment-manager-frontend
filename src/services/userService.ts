@@ -22,14 +22,19 @@ export interface SignupParams {
   class?: string,
 }
 
-
+export interface LoginResponse {
+  token: string,
+  uid: string,
+  username: string,
+  type: 0 | 1
+}
 /**
  * 
  * @param loginParms 登陆参数
  * @returns 返回携带Token的Response
  */
-const login = async (loginParms: LoginParams): Promise<BaseResponse<string>> => {
-  const response = await Axios.instance.post<BaseResponse<string>>(loginUrl, loginParms);
+const login = async (loginParms: LoginParams): Promise<BaseResponse<LoginResponse>> => {
+  const response = await Axios.instance.post<BaseResponse<LoginResponse>>(loginUrl, loginParms);
   return response.data;
 }
 

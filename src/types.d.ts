@@ -94,7 +94,7 @@ export interface StudentAssignment extends BaseAssignment, ClassStudent {
  * 教师用户
  */
 export interface Teacher {
-  tId: number,
+  tId: string,
   username: string,
   avator: string,
   classs: string[],
@@ -104,6 +104,7 @@ export interface Teacher {
  * 学生端用户
  */
 export interface StudentUser {
+  sId: string
   username: string,
   avator: string,
   studentNumber: string,

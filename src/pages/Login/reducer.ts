@@ -42,18 +42,23 @@ export const onLogin = (account: string, password: string, type: 0 | 1, remember
     const requestParams: LoginParams = { account, password, type }
     try {
       const response = await userService.login(requestParams);
-      const token = response.content;
-      if (response.code === StateCode.success && token !== null && token !== "") {
-        if (remember) {
-          Global.storageToken(token);
+      const content = response.content;
+      if (response.code === StateCode.success && content !== null) {
+        const token = content.token;
+        if (token !== null && token !== "") {
+          if (remember) {
+            Global.storageToken(content);
+          }
+          Global.setToken(content);
+          dispatch({
+            type: "loginSuccess",
+          })
+          return
         }
-        Global.setToken(token);
-        dispatch({
-          type: "loginSuccess",
-        })
       }
+      message.error("账号或密码错误请重试");
     } catch (error) {
-      message.error("账号或密码错误请重试")
+      message.error("账号或密码错误请重试");
     }
     dispatch({
       type: "setLoading",
