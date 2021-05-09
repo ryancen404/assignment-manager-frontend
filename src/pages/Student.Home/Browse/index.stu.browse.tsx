@@ -35,7 +35,7 @@ const StuBrowsePage = (props: StuBrowseProps) => {
         <Switch>
           {/* 点击后的作业详情页 :assignId作业Id */}
           <Route path={`${match?.path}${stu_router.browse.detail}`}>
-            <StuAssignmentDeatil/>
+            <StuAssignmentDeatil />
           </Route>
           <Route path={match?.path}>
             <StatusWrapper
@@ -55,8 +55,19 @@ const StuBrowsePage = (props: StuBrowseProps) => {
 export type StuShowAssignment = StudentBrowseAssignment & { timeFromTo: string };
 const handleTime = (assignments: StudentBrowseAssignment[]) => {
   return assignments.map((a): StuShowAssignment => {
+    const start = new Date(a.startTime.replace(/-/g, "/"));
+    const end = new Date(a.endTime.replace(/-/g, "/"));
+    const today = new Date()
+    let text: AssignmentStatus = "未开始"
+    if (today > start && today < end) {
+      text = "进行中"
+    } else if (today > end) {
+      text = "已结束"
+    }
     return {
       ...a,
+      teacherName: a.teacherName + "老师",
+      status: text,
       timeFromTo: `${a.startTime} - ${a.endTime}`,
     }
   })
@@ -82,6 +93,9 @@ function getColumns(match: any): ColumnsType<StudentBrowseAssignment> {
       title: "任课老师",
       dataIndex: "teacherName",
       key: "tname",
+      render: (value: string) => {
+        return value
+      }
     },
     {
       title: '时间',
@@ -109,10 +123,18 @@ function getColumns(match: any): ColumnsType<StudentBrowseAssignment> {
       }
     },
     {
+      title: "分数",
+      key: "score",
+      dataIndex: "score",
+      render: (value: string) => {
+        return Number(value) <= 0 ? "无" : value
+      }
+    },
+    {
       title: '作业状态',
       key: "status",
       dataIndex: 'status',
-      render: (text: AssignmentStatus) => {
+      render: (text: string) => {
         let color = '';
         if (text === '未开始') {
           color = 'green';

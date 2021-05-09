@@ -39,7 +39,7 @@ const StuDetailContent = (props: StuDetailContentProps) => {
   )
 }
 
-const renderContent = (text: string, color?: string) => <p style={{ fontSize: "18px", color }}>{text}</p>
+const renderContent = (text: string, color?: string) => <p style={{ fontSize: "18px", color: "black" }}>{text}</p>
 
 const getMyAssignment = (assignment: StuShowAssignment) => {
   if (!assignment.myFiles || assignment.myFiles.length === 0) {

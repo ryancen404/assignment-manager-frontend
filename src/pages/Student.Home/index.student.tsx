@@ -8,7 +8,6 @@ import {
 } from '@ant-design/icons';
 
 import { router, stu_router } from '../../router';
-import InfoManagerPage from '../Info';
 import Global from '../../Global';
 import Axios from '../../services/config.service';
 import FixHeader from '../Home/components/FixHeader';

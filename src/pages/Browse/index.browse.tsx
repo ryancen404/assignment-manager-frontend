@@ -66,8 +66,18 @@ const AssignmentBrowsePage = (props: BrowseProps) => {
 export type ShowAssignment = Assignment & { timeFromTo: string, completion: string };
 const handleTime = (assignments: Assignment[]) => {
   return assignments.map((a): ShowAssignment => {
+    const start = new Date(a.startTime.replace(/-/g, "/"));
+    const end = new Date(a.endTime.replace(/-/g, "/"));
+    const today = new Date()
+    let text: AssignmentStatus = "未开始"
+    if (today > start && today < end) {
+      text = "进行中"
+    } else if (today > end) {
+      text = "已结束"
+    }
     return {
       ...a,
+      status: text,
       timeFromTo: `${a.startTime} - ${a.endTime}`,
       completion: `${a.complete} / ${a.total}`
     }
